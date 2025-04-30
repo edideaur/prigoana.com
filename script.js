@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const audio = document.getElementById("bg-audio");
 
 	const allSongs = [
-		"song1.flac", "song2.flac", "song3.flac", "song4.flac", "song5.flac",
+		"song1.mp3", "song2.flac", "song3.flac", "song4.flac", "song5.flac",
 		"song6.flac", "song7.flac", "song8.mp3", "song9.flac", "song10.mp3",
 		"song11.flac", "song12.flac", "song13.flac", "song14.flac", "song15.mp3"
 	];
