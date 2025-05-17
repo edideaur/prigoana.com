@@ -137,7 +137,7 @@ audio {
     }
 
     #play-toggle {
-        right: 58px; /* Adjust spacing based on smaller screens */
+        right: 144px; /* Adjust spacing based on smaller screens */
     }
 
     #overlay {

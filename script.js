@@ -25,13 +25,18 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
-	// Function to play the next song
-	function playNextSong() {
-		if (songBag.length === 0) refillBag();
-		const nextSong = songBag.pop();
-		audio.src = `./music/${nextSong}`;
+function playNextSong() {
+	if (songBag.length === 0) refillBag();
+	const nextSong = songBag.pop();
+	audio.src = `./music/${nextSong}`;
+
+	// Wait for metadata before trying to play
+	audio.load();
+	audio.oncanplaythrough = () => {
 		audio.play().catch(err => console.error("Audio play error:", err));
-	}
+	};
+}
+
 
 	// Play/Pause button click event
 	playToggle.addEventListener("click", () => {
