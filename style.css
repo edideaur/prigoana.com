@@ -1,11 +1,11 @@
 :root {
-    --bg: #000000;
-    --fg: #ffffff;
+    --bg: #ffffff;
+    --fg: #000000;
 }
 
 body.dark {
-    --bg: #ffffff;
-    --fg: #000000;
+    --bg: #000000;
+    --fg: #ffffff;
 }
 
 body {
