@@ -11,16 +11,24 @@
   <body>
 <button id="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
 <button id="play-toggle">Play</button>
-    <h1>prigoana.com</h1>
+<h1>
+  <span class="heading-text">prigoana.com</span>
+
+</h1>
+| E-Mail | GitHub | Last.FM | Instagram |
+
+
     <p>Last played song:</p>
     <div id="now-playing">Loading...</div>
-    <a href="https://instagram.com/edideaur">
-      <p>Make sure y'all follow me on instagram</p>
-    </a>
+    
+<a id="link" href="#">
+  <b><p id="verse"></p>
+  <p id="reference"></p></b>
+</a>
     <h2>Services</h2>
     <ul>
       <li>
-        <a href="https://mount.prigoana.com/index.html"> Web drive with over 300 GB of drum kits, loop kits, presets and VSTs (webUI and WebDAV) </a>
+        <a href="https://mount.prigoana.com/index.html"> Web drive with over 700 GB of drum kits, loop kits, presets and VSTs (webUI and WebDAV) </a>
       </li>
       <li>
         <a href="https://m3u.prigoana.com">M3U IPTV playlist with over 50,000 individual channels</a>
@@ -29,6 +37,9 @@
         <a href="https://fin.prigoana.com">Jellyfin Instance (DM for more info)</a>
       </li>
     </ul>
+
+
+
     <h2>Guides</h2>
     <details>
       <summary>Ad Blocking</summary>
@@ -40,7 +51,7 @@
     <details>
       <summary>Cracked Spotify</summary>
       <p> Android: install <a href="https://github.com/Team-xManager/xManager">xManager</a>
-        <br> iOS: sideload <a href="https://spotc.yodaluca.dev/">SpotC++</a>
+        <br> iOS: <a href="https://sideload.wiki">sideload</a> <a href="https://spotc.yodaluca.dev/">SpotC++</a>
         <br> Windows: install <a href="https://github.com/SpotX-Official/SpotX">SpotX</a> Linux/Mac: install <a href="https://github.com/SpotX-Official/SpotX-Bash">SpotX Bash</a> Browser: Follow the guide above
       </p>
     </details>
@@ -71,24 +82,28 @@
     <h2>Links</h2>
     <ul>
       <li>
-        <a href="https://fmhy.net">FMHY (lots of free stuff)</a>
+        <a href="https://fmhy.net">FMHY</a> (lots of free stuff)
       </li>
       <li>
-        <a href="https://artistgrid.cx">ArtistGrid (Unreleased music)</a>
+        <a href="https://artistgrid.cx">ArtistGrid</a> (Unreleased music)
       </li>
       <li>
-        <a href="https://audioz.download">AudioZ (free VSTs and Drumkits)</a>
+        <a href="https://audioz.download">AudioZ</a> (free VSTs and Drumkits)
+      </li>
+      <li>
+        <a href="https://dxsign.cc/">DxSign</a> and the <a href="https://sideload.wiki/">Sideload Wiki</a> (cheap apple signing certificates and how to use them)
       </li>
     </ul>
     <audio id="bg-audio" autoplay muted loop></audio>
     <script src="script.js"></script>
-    <script>
+    <script src="bible.js"></script>
+<!--    <script>
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.register('/service-worker.js')
             .then(() => console.log('Service Worker registered'))
             .catch(err => console.error('Service Worker registration failed:', err));
         }
-      </script>
+      </script> -->
       
   </body>
 </html>

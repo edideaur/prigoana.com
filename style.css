@@ -149,3 +149,12 @@ audio {
         word-break: break-word;
     }
 }
+.inline-icon {
+  height: 2em;
+  width: auto;
+  vertical-align: middle;
+  margin-left: 0em; /* optional: space between text and icons */
+}
+h1 .heading-text {
+  padding-bottom: 2px;
+}
