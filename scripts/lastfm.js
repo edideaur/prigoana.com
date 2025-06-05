@@ -27,6 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
 				} else {
 					playedInfo = `<p>at ${formattedTime}, ${hours} hour${hours !== 1 ? 's' : ''} and ${minutes} minute${minutes !== 1 ? 's' : ''} ago</p>`;
 				}
+			} else {
+				playedInfo = `<p><em>Now playing</em></p>`;
 			}
 
 			document.getElementById("now-playing").innerHTML = `
