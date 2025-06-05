@@ -24,7 +24,7 @@ function getSystemPreference() {
 
 function initTheme() {
 	const savedTheme = getCookie("theme");
-	const themeToApply = savedTheme || getSystemPreference() || "dark";
+	const themeToApply = savedTheme || "dark"; // Always default to dark if no cookie
 	applyTheme(themeToApply);
 }
 
