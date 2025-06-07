@@ -11,13 +11,20 @@ function formatTimeAgo(uts) {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
 
-    const formattedTime = playedDate.toLocaleTimeString([], {
+    // Format time with timezone abbreviation
+    const timeStringWithZone = playedDate.toLocaleTimeString([], {
         hour: '2-digit',
         minute: '2-digit',
-        hour12: false
+        hour12: false,
+        timeZoneName: 'short'
     });
 
-    let timeAgo = `at ${formattedTime} EET, `;
+    // Extract time and 3-letter timezone abbreviation
+    const match = timeStringWithZone.match(/^(\d{2}:\d{2})\s*(\w{2,5})$/);
+    const formattedTime = match ? match[1] : playedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+    const tzAbbr = match ? match[2]:"";
+
+    let timeAgo = `at ${formattedTime}${tzAbbr}, `;
 
     if (hours > 0) {
         timeAgo += `${hours} hour${hours !== 1 ? 's' : ''}, `;
@@ -30,6 +37,7 @@ function formatTimeAgo(uts) {
 
     return `<p>${timeAgo}</p>`;
 }
+
 
 
 function updateTimer() {
