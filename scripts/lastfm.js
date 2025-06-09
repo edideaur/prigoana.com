@@ -24,7 +24,7 @@ function formatTimeAgo(uts) {
     const formattedTime = match ? match[1] : playedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
     const tzAbbr = match ? match[2]:"";
 
-    let timeAgo = `at ${formattedTime}${tzAbbr}, `;
+    let timeAgo = `at ${formattedTime} ${tzAbbr}, `;
 
     if (hours > 0) {
         timeAgo += `${hours} hour${hours !== 1 ? 's' : ''}, `;
