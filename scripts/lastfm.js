@@ -72,7 +72,7 @@ function fetchNowPlaying() {
             const nowPlaying = document.getElementById("now-playing");
             nowPlaying.style.opacity = 0;
 
-            setTimeout(() => {
+            const updateDOM = () => {
                 nowPlaying.innerHTML = `
                     <a href="${url}">
                         <p><strong>${name}</strong> by <strong>${artist}</strong></p>
@@ -82,7 +82,16 @@ function fetchNowPlaying() {
                     </a>
                 `;
                 nowPlaying.style.opacity = 1;
-            }, 300);
+            };
+
+            if (image) {
+                const img = new Image();
+                img.src = image;
+                img.onload = () => setTimeout(updateDOM, 300);
+                img.onerror = () => setTimeout(updateDOM, 300); // fallback on error
+            } else {
+                setTimeout(updateDOM, 300);
+            }
         })
         .catch(error => {
             document.getElementById("now-playing").textContent = "Could not load now playing info.";
