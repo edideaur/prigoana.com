@@ -22,8 +22,8 @@
 
 
 
-    <p>Last played song:</p>
-    <div id="now-playing">Loading...</div>
+
+    <div id="now-playing"></div>
  <p id="visitor-count"></p>   
     <h2></h2>
 
@@ -108,13 +108,13 @@
     <script src="./scripts/nextdns.js"></script>
     <script src="./scripts/count.js"></script>
 
-<!--    <script>
+    <script>
         if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/service-worker.js')
+          navigator.serviceWorker.register('./scripts/service-worker.js')
             .then(() => console.log('Service Worker registered'))
             .catch(err => console.error('Service Worker registration failed:', err));
         }
-      </script> -->
+      </script>
       
   </body>
 </html>
