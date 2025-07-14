@@ -159,3 +159,11 @@ audio {
 h1 .heading-text {
   padding-bottom: 2px;
 }
+
+  .highlightable {
+    color: rgb(255, 255, 255);
+    text-decoration: underline;
+  }
+  .highlightable:hover {
+    text-decoration: none;
+  }
