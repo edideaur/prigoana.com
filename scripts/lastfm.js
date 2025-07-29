@@ -81,11 +81,23 @@ function fetchNowPlaying() {
             lastTrackKey = trackKey;  // Update here every time song changes
             lastUts = uts;
 
+            // Expose lastTrackKey globally for music.js
+            window.lastTrackKey = lastTrackKey;
+
             const name = track.name;
             const artist = track.artist["#text"];
             const album = track.album["#text"];
             const image = track.image.find(img => img.size === "extralarge")?.["#text"] || "";
             const url = track.url;
+
+            // Expose current track info globally for music.js metadata update
+            window.currentTrackInfo = {
+                name,
+                artist,
+                album,
+                image,
+                url
+            };
 
             const nowPlaying = document.getElementById("now-playing");
             nowPlaying.style.opacity = 0;
@@ -101,7 +113,7 @@ function fetchNowPlaying() {
                 `;
                 nowPlaying.style.opacity = 1;
 
-                updateMediaSessionMetadata(track);
+                //updateMediaSessionMetadata(track);
             };
 
             if (image) {

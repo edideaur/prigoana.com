@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 audio.play().catch(err => console.error("Audio play error:", err));
                 if ('mediaSession' in navigator) {
                     navigator.mediaSession.playbackState = 'playing';
+                    updateMediaSessionMetadataFromCurrentTrack();
                 }
             };
             currentTrackKey = key;
@@ -39,6 +40,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 position: audio.currentTime || 0
             });
         }
+    }
+
+    // Update media session metadata from the current global track info
+    function updateMediaSessionMetadataFromCurrentTrack() {
+        if (!('mediaSession' in navigator)) return;
+        const track = window.currentTrackInfo;
+        if (!track) return;
+
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: track.name,
+            artist: track.artist,
+            album: track.album,
+            artwork: track.image ? [
+                { src: track.image, sizes: '300x300', type: 'image/png' }
+            ] : []
+        });
     }
 
     // Handlers for media session actions
@@ -75,8 +92,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         navigator.mediaSession.setActionHandler('nexttrack', () => {
-            // Implement if you have a playlist
-            console.log("Next track pressed - not implemented");
+            if (!window.lastTrackKey) {
+                console.warn("No lastTrackKey available for next track");
+                return;
+            }
+            playSongFromKey(window.lastTrackKey).then(() => {
+                updateMediaSessionMetadataFromCurrentTrack();
+            });
         });
     }
 
