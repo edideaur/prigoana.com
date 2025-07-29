@@ -1,4 +1,5 @@
 let lastTrackId = null;
+let lastTrackKey = null;  // artist + song name
 let lastUts = null;
 let updateInterval = null;
 
@@ -22,7 +23,7 @@ function formatTimeAgo(uts) {
     // Extract time and 3-letter timezone abbreviation
     const match = timeStringWithZone.match(/^(\d{2}:\d{2})\s*(\w{2,5})$/);
     const formattedTime = match ? match[1] : playedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-    const tzAbbr = match ? match[2]:"";
+    const tzAbbr = match ? match[2] : "";
 
     let timeAgo = `at ${formattedTime} ${tzAbbr}, `;
 
@@ -37,8 +38,6 @@ function formatTimeAgo(uts) {
 
     return `<p>${timeAgo}</p>`;
 }
-
-
 
 function updateTimer() {
     if (!lastUts) return;
@@ -56,11 +55,14 @@ function fetchNowPlaying() {
         .then(data => {
             const track = data.track;
             const trackId = track.mbid || (track.name + track.artist["#text"]);
+            const trackKey = [...track.artist["#text"].split(' '), ...track.name.split(' ')].join('+');
+
             const uts = track.date?.uts;
 
             if (trackId === lastTrackId) return;
 
             lastTrackId = trackId;
+            lastTrackKey = trackKey;  // Update here every time song changes
             lastUts = uts;
 
             const name = track.name;
