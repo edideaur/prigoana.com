@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let initialized = false;
     let currentTrackKey = null; // stores the last loaded key
 
+    // Play song by key - fetch URL & play
     async function playSongFromKey(key) {
         console.log("Now playing:", key);
         try {
@@ -19,7 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
             audio.load();
             audio.oncanplaythrough = () => {
                 audio.play().catch(err => console.error("Audio play error:", err));
-                // Update Media Session playback state
                 if ('mediaSession' in navigator) {
                     navigator.mediaSession.playbackState = 'playing';
                 }
@@ -28,6 +28,56 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (err) {
             console.error("Error loading track:", err);
         }
+    }
+
+    // Update media session position state (duration, position, playbackRate)
+    function updatePositionState() {
+        if ('setPositionState' in navigator.mediaSession) {
+            navigator.mediaSession.setPositionState({
+                duration: audio.duration || 0,
+                playbackRate: audio.playbackRate || 1,
+                position: audio.currentTime || 0
+            });
+        }
+    }
+
+    // Handlers for media session actions
+    function setupMediaSessionHandlers() {
+        if (!('mediaSession' in navigator)) return;
+
+        navigator.mediaSession.setActionHandler('play', () => {
+            audio.play().catch(err => console.error("Audio play error:", err));
+        });
+
+        navigator.mediaSession.setActionHandler('pause', () => {
+            audio.pause();
+        });
+
+        navigator.mediaSession.setActionHandler('seekto', (details) => {
+            if (details.fastSeek && 'fastSeek' in audio) {
+                audio.fastSeek(details.seekTime);
+            } else {
+                audio.currentTime = details.seekTime;
+            }
+        });
+
+        navigator.mediaSession.setActionHandler('stop', () => {
+            audio.pause();
+            audio.currentTime = 0;
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.playbackState = 'none';
+            }
+        });
+
+        navigator.mediaSession.setActionHandler('previoustrack', () => {
+            // Implement if you have a playlist
+            console.log("Previous track pressed - not implemented");
+        });
+
+        navigator.mediaSession.setActionHandler('nexttrack', () => {
+            // Implement if you have a playlist
+            console.log("Next track pressed - not implemented");
+        });
     }
 
     playToggle.addEventListener("click", () => {
@@ -70,11 +120,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     audio.addEventListener("ended", () => {
-        // Auto-replay the current lastTrackKey track on end
+        // Auto replay same track for now
         playSongFromKey(lastTrackKey);
     });
 
-    // Optional: Sync play/pause events on audio element with mediaSession
     audio.addEventListener("play", () => {
         isPlaying = true;
         playToggle.textContent = "Pause";
@@ -90,4 +139,13 @@ document.addEventListener("DOMContentLoaded", () => {
             navigator.mediaSession.playbackState = 'paused';
         }
     });
+
+    // Periodically update position state for scrubbing UI
+    setInterval(() => {
+        if (isPlaying) {
+            updatePositionState();
+        }
+    }, 500);
+
+    setupMediaSessionHandlers();
 });

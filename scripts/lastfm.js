@@ -12,7 +12,6 @@ function formatTimeAgo(uts) {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
 
-    // Format time with timezone abbreviation
     const timeStringWithZone = playedDate.toLocaleTimeString([], {
         hour: '2-digit',
         minute: '2-digit',
@@ -20,7 +19,6 @@ function formatTimeAgo(uts) {
         timeZoneName: 'short'
     });
 
-    // Extract time and 3-letter timezone abbreviation
     const match = timeStringWithZone.match(/^(\d{2}:\d{2})\s*(\w{2,5})$/);
     const formattedTime = match ? match[1] : playedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
     const tzAbbr = match ? match[2] : "";
@@ -47,6 +45,24 @@ function updateTimer() {
     if (timerEl) {
         timerEl.innerHTML = formatTimeAgo(lastUts);
     }
+}
+
+function updateMediaSessionMetadata(track) {
+    if (!('mediaSession' in navigator)) return;
+
+    const name = track.name;
+    const artist = track.artist["#text"];
+    const album = track.album["#text"];
+    const image = track.image.find(img => img.size === "extralarge")?.["#text"] || "";
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+        title: name,
+        artist: artist,
+        album: album,
+        artwork: image ? [
+            { src: image, sizes: '300x300', type: 'image/png' }
+        ] : []
+    });
 }
 
 function fetchNowPlaying() {
@@ -85,31 +101,7 @@ function fetchNowPlaying() {
                 `;
                 nowPlaying.style.opacity = 1;
 
-                // Media Session API integration
-                if ('mediaSession' in navigator) {
-                    navigator.mediaSession.metadata = new MediaMetadata({
-                        title: name,
-                        artist: artist,
-                        album: album,
-                        artwork: image ? [
-                            { src: image, sizes: '300x300', type: 'image/png' }
-                        ] : []
-                    });
-
-                    // Optional: action handlers for play/pause
-                    navigator.mediaSession.setActionHandler('play', () => {
-                        const audio = document.getElementById("bg-audio");
-                        audio.play().catch(err => console.error("Audio play error:", err));
-                    });
-                    navigator.mediaSession.setActionHandler('pause', () => {
-                        const audio = document.getElementById("bg-audio");
-                        audio.pause();
-                    });
-
-                    // You can add nexttrack and previoustrack handlers if desired
-                    // navigator.mediaSession.setActionHandler('nexttrack', () => { ... });
-                    // navigator.mediaSession.setActionHandler('previoustrack', () => { ... });
-                }
+                updateMediaSessionMetadata(track);
             };
 
             if (image) {
