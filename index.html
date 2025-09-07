@@ -124,8 +124,11 @@
     </details>
 <h2></h2>
 <a href="https://xn--sr8hvo.ws/previous">←</a>
-An <a href="https://xn--sr8hvo.ws">IndieWeb Webring</a>
-<a href="https://xn--sr8hvo.ws/next">→</a>
+<a href="https://xn--sr8hvo.ws">IndieWeb</a>
+<a href="https://xn--sr8hvo.ws/next">→</a><br>
+<a href='https://webring.dinhe.net/prev/https://prigoana.com/'>←</a>
+<a href="https://webring.dinhe.net/">RetroNaut</a>
+<a href='https://webring.dinhe.net/next/https://prigoana.com/'>→</a>
 
 <audio id="bg-audio-1" preload="auto" muted></audio>
 <audio id="bg-audio-2" preload="auto" muted></audio>
@@ -151,9 +154,6 @@ An <a href="https://xn--sr8hvo.ws">IndieWeb Webring</a>
         cacheBustButton.addEventListener('click', () => {
           if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
             navigator.serviceWorker.controller.postMessage({ action: 'clear_cache_and_reload' });
-            alert('Cache cleared! The page will now reload to get the latest content from the server.');
-          } else {
-            alert('Could not send update command. Please do a hard refresh (Ctrl+Shift+R or Cmd+Shift+R) to update.');
           }
         });
       }
