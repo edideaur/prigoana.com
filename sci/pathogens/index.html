@@ -5,23 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pathogens</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="icon" type="image/x-icon" href="https://prigoana.com/favicon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --background: #0a0a0a;
-            --foreground: #f5f5f5;
-            --muted-foreground: #a3a3a3;
-            --card-background: #171717;
-            --border: #262626;
-            --hover-background: #222222;
+            --background: #000000;
+            --foreground: #e0e0e0;
+            --muted-foreground: #6b6b6b;
+            --card-background: #080808;
+            --border: #1a1a1a;
+            --hover-background: #121212;
             --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(15px);
             }
             to {
                 opacity: 1;
@@ -68,15 +69,18 @@
             text-align: center;
             margin-bottom: 3rem;
             color: var(--foreground);
-            animation: fadeIn 0.8s ease-out forwards;
+            
+            /* Animation */
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 0.2s forwards;
         }
-
+        
         .table-wrapper {
             border: 1px solid var(--border);
             border-radius: 0.75rem;
             overflow: hidden;
             background-color: var(--card-background);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
         }
         
         table {
@@ -91,7 +95,11 @@
         }
 
         thead {
-            background-color: #111111;
+            background-color: #030303;
+
+            /* Animation */
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 0.5s forwards;
         }
 
         th {
@@ -105,15 +113,18 @@
 
         tbody tr {
             border-bottom: 1px solid var(--border);
+            transition: background-color 0.3s ease;
+            
+            /* Animation */
             opacity: 0;
             animation: fadeIn 0.5s ease-out forwards;
-            transition: background-color 0.3s ease;
         }
         
-        tbody tr:nth-child(1) { animation-delay: 0.2s; }
-        tbody tr:nth-child(2) { animation-delay: 0.3s; }
-        tbody tr:nth-child(3) { animation-delay: 0.4s; }
-        tbody tr:nth-child(4) { animation-delay: 0.5s; }
+        /* Staggered row animation */
+        tbody tr:nth-child(1) { animation-delay: 0.7s; }
+        tbody tr:nth-child(2) { animation-delay: 0.8s; }
+        tbody tr:nth-child(3) { animation-delay: 0.9s; }
+        tbody tr:nth-child(4) { animation-delay: 1.0s; }
 
         tbody tr:last-child {
             border-bottom: none;
@@ -132,7 +143,8 @@
             color: #ffffff;
         }
         
-        td:nth-child(3) {
+        /* Key Characteristics column */
+        td:nth-child(4) {
            color: var(--muted-foreground);
            font-size: 0.95rem;
         }
@@ -194,7 +206,7 @@
             }
             
             td:nth-child(1) {
-                background-color: #202020;
+                background-color: #0f0f0f;
                 font-size: 1.1rem;
                 padding-top: 1rem;
                 padding-bottom: 1rem;
@@ -205,12 +217,14 @@
                 display: none;
             }
 
-            td:nth-child(3) {
+            td:nth-child(3),
+            td:nth-child(4) {
                text-align: left;
                padding-top: 2.25rem;
             }
             
-            td:nth-child(3)::before {
+            td:nth-child(3)::before,
+            td:nth-child(4)::before {
                top: 0.75rem;
             }
         }
@@ -226,6 +240,7 @@
                     <tr>
                         <th>Pathogen</th>
                         <th>Associated Diseases</th>
+                        <th>How They Spread</th>
                         <th>Key Characteristics</th>
                     </tr>
                 </thead>
@@ -233,21 +248,25 @@
                     <tr>
                         <td data-label="Pathogen">Bacteria</td>
                         <td data-label="Diseases">Tuberculosis, Salmonella, Cholera, Tetanus, Gonorrhea</td>
+                        <td data-label="Spread">Direct contact, contaminated food/water, airborne droplets, vectors.</td>
                         <td data-label="Notes">Prokaryotic, single-celled organisms. Reproduce rapidly and can cause disease by producing toxins or damaging host cells. Treatable with antibiotics.</td>
                     </tr>
                     <tr>
                         <td data-label="Pathogen">Fungi</td>
                         <td data-label="Diseases">Athlete’s Foot, Ringworm, Thrush, Aspergillosis</td>
+                        <td data-label="Spread">Contact with spores (airborne or on surfaces), direct contact with infected skin.</td>
                         <td data-label="Notes">Eukaryotic organisms (e.g., yeasts, molds) with cell walls containing chitin. Many infections are opportunistic, affecting those with weakened immune systems. Treated with antifungals.</td>
                     </tr>
                     <tr>
                         <td data-label="Pathogen">Protoctists</td>
                         <td data-label="Diseases">Malaria, Amoebic dysentery, Giardiasis, Leishmaniasis</td>
+                        <td data-label="Spread">Often through vectors (like mosquitoes, flies), contaminated water or food.</td>
                         <td data-label="Notes">A diverse kingdom of single-celled eukaryotic organisms. Often have complex life cycles and may be spread by a vector (e.g., the mosquito for malaria).</td>
                     </tr>
                     <tr>
                         <td data-label="Pathogen">Virus</td>
                         <td data-label="Diseases">Influenza, Common Cold, COVID-19, HIV/AIDS, Measles</td>
+                        <td data-label="Spread">Airborne droplets, direct contact with bodily fluids, contaminated surfaces (fomites).</td>
                         <td data-label="Notes">Acellular obligate parasites; can only reproduce inside living host cells. Consist of genetic material (DNA or RNA) in a protein coat. Vaccines are a key preventative measure.</td>
                     </tr>
                 </tbody>
