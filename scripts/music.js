@@ -17,6 +17,12 @@
     const transitionDuration = 500;
 
     const servers = [
+        "https://aether.squid.wtf",
+        "https://zeus.squid.wtf",
+        "https://kraken.squid.wtf",
+        "https://phoenix.squid.wtf",
+        "https://shiva.squid.wtf",
+        "https://chaos.squid.wtf",
         "https://ohio.monochrome.tf",
         "https://virginia.monochrome.tf",
         "https://oregon.monochrome.tf",
@@ -26,6 +32,7 @@
         "https://singapore.monochrome.tf",
         "https://jakarta.monochrome.tf"
     ];
+
 
     function formatTimeAgo(uts) {
         const playedDate = new Date(uts * 1000);
@@ -65,7 +72,7 @@
                 const searchData = await searchResponse.json();
                 if (!searchData.items || searchData.items.length === 0) continue;
                 const trackId = searchData.items[0].id;
-                const trackUrl = `${server}/track/?id=${trackId}&quality=LOSSLESS`;
+                const trackUrl = `${server}/track/?id=${trackId}&quality=LOW`;
                 const trackResponse = await fetch(trackUrl);
                 if (!trackResponse.ok) continue;
                 const trackData = await trackResponse.json();
