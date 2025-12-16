@@ -26,7 +26,7 @@
         let hasAudioSource = false;
         let audioUrl = null;
         let fadeTimer = null;
-        let isFirstLoad = true; // Track if this is the first load
+        let isFirstLoad = true;
 
         const FADE_DURATION_MS = 2000;
         const FADE_INTERVAL_MS = 50;
@@ -34,11 +34,19 @@
         const LASTFM_USER = "eduardprigoana";
         const LASTFM_API_KEY = "816cfe50ddeeb73c9987b85de5c19e71";
         const servers = [
-            "https://tidal.kinoplus.online/",
+            "https://wolf.qqdl.site",
+            "https://katze.qqdl.site",
             "https://maus.qqdl.site",
             "https://vogel.qqdl.site",
-            "https://katze.qqdl.site",
-            "https://hund.qqdl.site"
+            "https://hund.qqdl.site",
+            "https://tidal.kinoplus.online/",
+            "https://triton.squid.wtf",
+            "https://aether.squid.wtf",
+            "https://zeus.squid.wtf",
+            "https://kraken.squid.wtf",
+            "https://phoenix.squid.wtf",
+            "https://shiva.squid.wtf",
+            "https://chaos.squid.wtf"
         ];
 
         function formatTimeAgo(uts) {
@@ -152,9 +160,19 @@
             const res = await fetch(url);
             if (!res.ok) throw new Error("Track fetch failed");
             const data = await res.json();
+
+            if (data && data.data && data.data.manifest) {
+                const manifestJson = atob(data.data.manifest);
+                const manifest = JSON.parse(manifestJson);
+                if (manifest.urls && manifest.urls.length > 0) {
+                    return manifest.urls[0];
+                }
+            }
+
             if (data && data.length >= 3 && data[2]?.OriginalTrackUrl) {
                 return data[2].OriginalTrackUrl;
             }
+
             throw new Error("Invalid track data");
         }
 
@@ -163,8 +181,11 @@
             const res = await fetch(searchUrl);
             if (!res.ok) throw new Error("Search failed");
             const data = await res.json();
-            if (data.items && data.items.length > 0) {
-                const id = data.items[0].id;
+            
+            const items = data.data?.items || data.items;
+            
+            if (items && items.length > 0) {
+                const id = items[0].id;
                 const audioUrl = await checkServerForTrack(server, id);
                 if (audioUrl) {
                     trackIdCache[term] = id;
@@ -280,7 +301,6 @@
 
                 const wasPlaying = isPlaying;
 
-                // Extract metadata
                 let img = track.image.find(i => i.size === "extralarge")?.["#text"] || track.image.at(-1)?.["#text"];
 
                 const trackInfo = {
@@ -292,14 +312,12 @@
                     uts: uts
                 };
 
-                // On first load: render immediately, then load audio
                 if (isFirstLoad) {
                     currentTrackInfo = trackInfo;
                     renderMetadata(currentTrackInfo);
                     lastTrackKey = trackKey;
                     isFirstLoad = false;
 
-                    // Load audio in background
                     try {
                         const audioUrlFound = await findAudioUrl(trackKey);
                         await prepareAudio(audioUrlFound);
@@ -318,7 +336,6 @@
                         setPlayButtonState(false);
                     }
                 } else {
-                    // On subsequent loads: wait for audio before rendering
                     try {
                         const audioUrlFound = await findAudioUrl(trackKey);
                         await prepareAudio(audioUrlFound);
