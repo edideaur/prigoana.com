@@ -1,7 +1,3 @@
 curl -fsSL https://bun.sh/install | bash && \
 curl -fsSL https://opencode.ai/install | bash && \
-grep -qxF 'export PATH="$HOME/.bun/bin:$HOME/.opencode/bin:$PATH"' ~/.bashrc || \
-echo 'export PATH="$HOME/.bun/bin:$HOME/.opencode/bin:$PATH"' >> ~/.bashrc && \
-export PATH="$HOME/.bun/bin:$HOME/.opencode/bin:$PATH" && \
-[[ -f ~/.bash_profile ]] && grep -qxF '[[ -f ~/.bashrc ]] && source ~/.bashrc' ~/.bash_profile || \
-echo '[[ -f ~/.bashrc ]] && source ~/.bashrc' >> ~/.bash_profile
+curl -fsSL https://blackbox.ai/install.sh | bash
