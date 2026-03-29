@@ -29,7 +29,7 @@ function renderMessage(msg) {
         : '';
 
     const contactHtml = msg.contact && msg.contact.trim() !== ''
-        ? `<div class="chat-contact">→ <a href="${msg.contact.includes('@') ? 'mailto:' + msg.contact : msg.contact}" target="_blank" rel="noopener">${escapeHtml(msg.contact)}</a></div>`
+        ? `<div class="chat-contact">→ <a href="${/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(msg.contact) ? 'mailto:' + msg.contact : msg.contact}" target="_blank" rel="noopener">${escapeHtml(msg.contact)}</a></div>`
         : '';
 
     return `
@@ -49,7 +49,9 @@ async function fetchMessages() {
     const container = document.getElementById('chat-messages');
 
     try {
-        const response = await fetch(CHAT_API);
+        const controller = new AbortController();
+        setTimeout(() => controller.abort(), 20000);
+        const response = await fetch(CHAT_API, { signal: controller.signal });
         if (!response.ok) throw new Error('Failed to fetch messages');
 
         const messages = await response.json();
@@ -67,11 +69,14 @@ async function fetchMessages() {
 }
 
 async function postMessage(name, message, contact = '', avatar = '') {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 20000);
     const response = await fetch(`${CHAT_API}/post`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
+        signal: controller.signal,
         body: JSON.stringify({
             name: name.trim(),
             message: message.trim(),

@@ -1,5 +1,5 @@
 const title = document.getElementById('glitchText');
-const chars = "ABCDEFGHIJKLMNOPQRSTUVXYZ[]#%&_<>*+";
+const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]#%&_<>*+";
 
 const glitchEffect = (target) => {
     const originalText = target.dataset.text || target.innerText;
@@ -56,45 +56,53 @@ document.querySelectorAll('.highlightable').forEach(codeBlock => {
     });
 });
 
-function toggleCrypto(header) {
-    const content = header.nextElementSibling;
-    const toggle = header.querySelector('.crypto-toggle');
-
-    content.classList.toggle('active');
-    toggle.textContent = content.classList.contains('active') ? '[-]' : '[+]';
-}
-
-function copyAddress(btn, address) {
-    navigator.clipboard.writeText(address).then(() => {
-        const originalText = btn.textContent;
-        btn.textContent = 'COPIED!';
-        btn.style.background = 'var(--accent)';
-        btn.style.color = '#000';
-        setTimeout(() => {
-            btn.textContent = originalText;
-            btn.style.background = '';
-            btn.style.color = '';
-        }, 1500);
-    });
-}
-
-function showQR(btn, address) {
-    const qrContainer = btn.closest('.crypto-content').querySelector('.qr-container');
-
-    if (qrContainer.classList.contains('active')) {
-        qrContainer.classList.remove('active');
-        qrContainer.innerHTML = '';
-        btn.textContent = 'QR CODE';
-    } else {
-        qrContainer.innerHTML = '';
-        qrContainer.classList.add('active');
-        new QRCode(qrContainer, {
-            text: address,
-            width: 200,
-            height: 200,
-            colorDark: "#ffffff",
-            colorLight: "#000000",
-        });
-        btn.textContent = 'HIDE QR';
+document.addEventListener('click', (e) => {
+    const header = e.target.closest('.crypto-header');
+    if (header) {
+        const content = header.nextElementSibling;
+        const toggle = header.querySelector('.crypto-toggle');
+        content.classList.toggle('active');
+        toggle.textContent = content.classList.contains('active') ? '[-]' : '[+]';
+        return;
     }
-}
+
+    const copyBtn = e.target.closest('[data-action="copy"]');
+    if (copyBtn) {
+        const address = copyBtn.dataset.address;
+        navigator.clipboard.writeText(address).then(() => {
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = 'COPIED!';
+            copyBtn.style.background = 'var(--accent)';
+            copyBtn.style.color = '#000';
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+                copyBtn.style.background = '';
+                copyBtn.style.color = '';
+            }, 1500);
+        });
+        return;
+    }
+
+    const qrBtn = e.target.closest('[data-action="qr"]');
+    if (qrBtn) {
+        const address = qrBtn.dataset.address;
+        const qrContainer = qrBtn.closest('.crypto-content').querySelector('.qr-container');
+        if (qrContainer.classList.contains('active')) {
+            qrContainer.classList.remove('active');
+            qrContainer.innerHTML = '';
+            qrBtn.textContent = 'QR CODE';
+        } else {
+            qrContainer.innerHTML = '';
+            qrContainer.classList.add('active');
+            new QRCode(qrContainer, {
+                text: address,
+                width: 200,
+                height: 200,
+                colorDark: "#ffffff",
+                colorLight: "#000000",
+            });
+            qrBtn.textContent = 'HIDE QR';
+        }
+        return;
+    }
+});

@@ -1,10 +1,12 @@
+const NEXTDNS_ID = '7af1b9';
+
 const instructions = {
 	android: `
 	  <h2>Android</h2>
 	  <ul>
 		<li>Go to <strong>Settings → Network & internet → Advanced → Private DNS</strong>.</li>
 		<li>Select <strong>Private DNS provider hostname</strong>.</li>
-		<li>Enter <code>7af1b9.dns.nextdns.io</code> and tap Save.</li>
+		<li>Enter <code>${NEXTDNS_ID}.dns.nextdns.io</code> and tap Save.</li>
 	  </ul>
 	`,
 	ios: `
@@ -13,7 +15,7 @@ const instructions = {
 	  <h3>Using the NextDNS App</h3>
 	  <ul>
 		<li>Install the <strong>NextDNS app</strong> from the App Store.</li>
-		<li>In Settings, enable <strong>Use Custom Configuration</strong> and enter <code>7af1b9</code>.</li>
+		<li>In Settings, enable <strong>Use Custom Configuration</strong> and enter <code>${NEXTDNS_ID}</code>.</li>
 		<li>Enable NextDNS.</li>
 	  </ul>
 	`,
@@ -23,13 +25,13 @@ const instructions = {
 	  <ul>
 		<li>Open <strong>Settings → Network & Internet</strong>.</li>
 		<li>Click Wi-Fi or Ethernet, then <strong>Hardware properties</strong>.</li>
-		<li>Edit DNS server assignment: use <code>45.90.28.0</code> and <code>45.90.30.0</code> with <code>https://dns.nextdns.io/7af1b9</code>.</li>
+		<li>Edit DNS server assignment: use <code>45.90.28.0</code> and <code>45.90.30.0</code> with <code>https://dns.nextdns.io/${NEXTDNS_ID}</code>.</li>
 	  </ul>
 
 	  <h3>NextDNS App</h3>
 	  <ul>
 		<li>Download and install the app.</li>
-		<li>In Settings, set Configuration ID to <code>7af1b9</code>.</li>
+		<li>In Settings, set Configuration ID to <code>${NEXTDNS_ID}</code>.</li>
 		<li>Enable NextDNS from the system tray.</li>
 	  </ul>
 
@@ -46,7 +48,7 @@ const instructions = {
 	  <h3>NextDNS App</h3>
 	  <ul>
 		<li>Install from the Mac App Store.</li>
-		<li>Set Configuration ID to <code>7af1b9</code>.</li>
+		<li>Set Configuration ID to <code>${NEXTDNS_ID}</code>.</li>
 		<li>Enable NextDNS in Preferences.</li>
 	  </ul>
 	  <h3>Manual Configuration</h3>
@@ -61,8 +63,8 @@ const instructions = {
 	  <h3>systemd-resolved</h3>
 	  <p>Edit <code>/etc/systemd/resolved.conf</code> with:</p>
 	  <pre><code>[Resolve]
-DNS=45.90.28.0#7af1b9.dns.nextdns.io
-DNS=2a07:a8c0::#7af1b9.dns.nextdns.io
+DNS=45.90.28.0#${NEXTDNS_ID}.dns.nextdns.io
+DNS=2a07:a8c0::#${NEXTDNS_ID}.dns.nextdns.io
 DNSOverTLS=yes</code></pre>
 	  <h3>NextDNS CLI</h3>
 	  <p>Run:</p>
@@ -78,7 +80,7 @@ DNSOverTLS=yes</code></pre>
 	  <ul>
 		<li>Go to <strong>Settings → Security and Privacy</strong>.</li>
 		<li>Enable <strong>Use secure DNS</strong>.</li>
-		<li>Use custom DNS: <code>https://dns.nextdns.io/7af1b9</code></li>
+		<li>Use custom DNS: <code>https://dns.nextdns.io/${NEXTDNS_ID}</code></li>
 	  </ul>
 	`,
 	browsers: `
@@ -86,12 +88,12 @@ DNSOverTLS=yes</code></pre>
 	  <h3>Chrome / Brave / Edge</h3>
 	  <ul>
 		<li>Go to <strong>Settings → Privacy & Security → Security</strong>.</li>
-		<li>Enable <strong>Use secure DNS</strong> with custom provider: <code>https://dns.nextdns.io/7af1b9</code></li>
+		<li>Enable <strong>Use secure DNS</strong> with custom provider: <code>https://dns.nextdns.io/${NEXTDNS_ID}</code></li>
 	  </ul>
 	  <h3>Firefox</h3>
 	  <ul>
 		<li>Go to <strong>Preferences → Privacy & Security</strong>.</li>
-		<li>Enable <strong>DNS over HTTPS</strong>, choose <strong>Custom</strong> and enter <code>https://dns.nextdns.io/7af1b9</code></li>
+		<li>Enable <strong>DNS over HTTPS</strong>, choose <strong>Custom</strong> and enter <code>https://dns.nextdns.io/${NEXTDNS_ID}</code></li>
 	  </ul>
 	`,
 	routers: `
@@ -117,8 +119,8 @@ DNSOverTLS=yes</code></pre>
 forward-zone:
   name: "."
   forward-tls-upstream: yes
-  forward-addr: 45.90.28.0#7af1b9.dns.nextdns.io
-  forward-addr: 2a07:a8c0::#7af1b9.dns.nextdns.io</code></pre>
+  forward-addr: 45.90.28.0#${NEXTDNS_ID}.dns.nextdns.io
+  forward-addr: 2a07:a8c0::#${NEXTDNS_ID}.dns.nextdns.io</code></pre>
 	`,
 	mikrotik: `
 	  <h2>MikroTik</h2>
@@ -127,7 +129,7 @@ forward-zone:
 		<li>Import cert: <code>/certificate import file-name=cacert.pem</code></li>
 		<li>Configure DNS:
 		  <pre><code>/ip dns static add name=dns.nextdns.io address=45.90.28.0 type=A
-/ip dns set use-doh-server="https://dns.nextdns.io/7af1b9" verify-doh-cert=yes</code></pre>
+/ip dns set use-doh-server="https://dns.nextdns.io/${NEXTDNS_ID}" verify-doh-cert=yes</code></pre>
 		</li>
 	  </ol>
 	`
@@ -139,10 +141,12 @@ forward-zone:
   selectElement.addEventListener("change", (event) => {
 	const selected = event.target.value;
 	if (selected && instructions[selected]) {
-	  instructionsBox.innerHTML = instructions[selected];
+	  const parser = new DOMParser();
+	  const doc = parser.parseFromString(instructions[selected], 'text/html');
+	  instructionsBox.replaceChildren(...doc.body.childNodes);
 	  instructionsBox.style.display = "block";
 	} else {
 	  instructionsBox.style.display = "none";
-	  instructionsBox.innerHTML = "";
+	  instructionsBox.replaceChildren();
 	}
   });

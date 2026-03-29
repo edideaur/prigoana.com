@@ -199,6 +199,11 @@ aside { border-right: 1px solid var(--border); padding: 1.5rem; background: #000
     font-weight: bold;
     font-size: 0.75rem;
     background: var(--grid-dim);
+    border: none;
+    color: var(--fg);
+    width: 100%;
+    font-family: var(--font-mono);
+    appearance: none;
 }
 .crypto-header:hover { background: #0a0a0a; }
 
@@ -247,7 +252,7 @@ aside { border-right: 1px solid var(--border); padding: 1.5rem; background: #000
     padding: 6px;
     background: #000;
     border: 1px solid var(--border);
-    color: #999;
+    color: #aaa;
     line-height: 1.4;
 }
 
@@ -273,7 +278,7 @@ h2 {
     text-transform: uppercase; letter-spacing: -1px;
     display: flex; align-items: center; gap: 10px;
 }
-h2::before { content: '>'; color: var(--accent); animation: blink 1s infinite; }
+h2::before { content: '>' / ''; color: var(--accent); animation: blink 1s infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
 .project-card {
@@ -651,6 +656,76 @@ select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px 
     font-style: italic;
 }
 
+/* Focus indicators */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+select:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 0;
+}
+
+/* Utility classes */
+.visitor-badge-wrap {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.visitor-badge {
+    border: 1px solid #fff;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    background: rgba(255,255,255,0.05);
+}
+
+.loading-blink {
+    animation: blink 0.5s infinite alternate;
+}
+
+.verse-link {
+    display: block;
+    margin-top: 10px;
+}
+
+.verse-text {
+    font-size: 0.8rem;
+    font-style: italic;
+    margin-bottom: 5px;
+    color: #bbb;
+    border-left: 2px solid #333;
+    padding-left: 10px;
+}
+
+.verse-ref {
+    font-size: 0.7rem;
+    text-align: right;
+    font-weight: bold;
+    color: var(--accent);
+}
+
+.section-number {
+    color: var(--border-light);
+}
+
+.project-status {
+    color: var(--accent);
+}
+
+.dropdown-label {
+    color: #888;
+    font-size: 0.8rem;
+}
+
+.footer-text {
+    margin-top: 30px;
+    font-family: var(--font-mono);
+    opacity: 0.5;
+}
+
 /* Mobile - Keep everything, just shrink it down */
 @media(max-width: 900px) {
     body {
@@ -785,5 +860,20 @@ select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px 
 
     footer {
         padding: 1.5rem 0.75rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    .marquee-content {
+        animation: none;
+    }
+    .reveal-on-scroll {
+        opacity: 1;
+        transform: none;
     }
 }

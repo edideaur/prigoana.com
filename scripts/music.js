@@ -39,6 +39,12 @@
             "https://hifi-two.spotisaver.net"
         ];
 
+        function fetchWithTimeout(url, options = {}) {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 20000);
+            return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timeout));
+        }
+
         function formatTimeAgo(uts) {
             if (!uts) return "Now playing";
             const playedDate = new Date(uts * 1000);
@@ -147,7 +153,7 @@
 
         async function checkServerForTrack(server, trackId) {
             const url = `${server}/track/?id=${trackId}&quality=LOW`;
-            const res = await fetch(url);
+            const res = await fetchWithTimeout(url);
             if (!res.ok) throw new Error("Track fetch failed");
             const data = await res.json();
 
@@ -168,7 +174,7 @@
 
         async function searchAndGetUrl(server, term) {
             const searchUrl = `${server}/search/?s=${encodeURIComponent(term)}`;
-            const res = await fetch(searchUrl);
+            const res = await fetchWithTimeout(searchUrl);
             if (!res.ok) throw new Error("Search failed");
             const data = await res.json();
             
@@ -273,7 +279,7 @@
         async function fetchLastFmData(forcePlay = false) {
             try {
                 const url = `https://ws.audioscrobbler.com/2.0/?method=User.getrecenttracks&user=${LASTFM_USER}&api_key=${LASTFM_API_KEY}&format=json&limit=1`;
-                const res = await fetch(url);
+                const res = await fetchWithTimeout(url);
                 const data = await res.json();
 
                 if (!data.recenttracks || !data.recenttracks.track.length) return;
@@ -302,6 +308,18 @@
                     uts: uts
                 };
 
+                async function loadTrackAudio() {
+                    const audioUrlFound = await findAudioUrl(trackKey);
+                    await prepareAudio(audioUrlFound);
+                    audioUrl = audioUrlFound;
+                    hasAudioSource = true;
+                    setPlayButtonState(true);
+                    if (wasPlaying || forcePlay) {
+                        performCrossfade();
+                        setupMediaSession();
+                    }
+                }
+
                 if (isFirstLoad) {
                     currentTrackInfo = trackInfo;
                     renderMetadata(currentTrackInfo);
@@ -309,17 +327,7 @@
                     isFirstLoad = false;
 
                     try {
-                        const audioUrlFound = await findAudioUrl(trackKey);
-                        await prepareAudio(audioUrlFound);
-
-                        audioUrl = audioUrlFound;
-                        hasAudioSource = true;
-                        setPlayButtonState(true);
-
-                        if (wasPlaying || forcePlay) {
-                            performCrossfade();
-                            setupMediaSession();
-                        }
+                        await loadTrackAudio();
                     } catch (audioErr) {
                         console.warn('Audio not available for this track:', audioErr.message);
                         hasAudioSource = false;
@@ -327,21 +335,10 @@
                     }
                 } else {
                     try {
-                        const audioUrlFound = await findAudioUrl(trackKey);
-                        await prepareAudio(audioUrlFound);
-
+                        await loadTrackAudio();
                         lastTrackKey = trackKey;
                         currentTrackInfo = trackInfo;
                         renderMetadata(currentTrackInfo);
-
-                        audioUrl = audioUrlFound;
-                        hasAudioSource = true;
-                        setPlayButtonState(true);
-
-                        if (wasPlaying || forcePlay) {
-                            performCrossfade();
-                            setupMediaSession();
-                        }
                     } catch (audioErr) {
                         console.warn('Audio not available, skipping track:', audioErr.message);
                     }
@@ -398,6 +395,6 @@
 
         fetchLastFmData();
         setInterval(updateTimer, 5000);
-        setInterval(fetchLastFmData, 15000);
+        setInterval(fetchLastFmData, 5000);
     });
 })();

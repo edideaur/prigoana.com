@@ -4,7 +4,9 @@
 
   async function fetchVisitorCount() {
     try {
-      const response = await fetch(apiUrl);
+      const controller = new AbortController();
+      setTimeout(() => controller.abort(), 20000);
+      const response = await fetch(apiUrl, { signal: controller.signal });
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
       const data = await response.json();

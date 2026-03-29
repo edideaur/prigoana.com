@@ -4,6 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PRIGOANA.COM</title>
+    <meta name="description" content="Personal website of Eduard Prigoana. Projects, guides, free software resources, music, and more.">
+    <meta name="author" content="Eduard Prigoana">
+    <meta name="theme-color" content="#000000">
+    <link rel="canonical" href="https://prigoana.com/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://prigoana.com/">
+    <meta property="og:title" content="PRIGOANA.COM">
+    <meta property="og:description" content="Personal website of Eduard Prigoana. Projects, guides, free software resources, music, and more.">
+    <meta property="og:image" content="https://prigoana.com/button/880x310.png">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="PRIGOANA.COM">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="PRIGOANA.COM">
+    <meta name="twitter:description" content="Personal website of Eduard Prigoana. Projects, guides, free software resources, music, and more.">
+    <meta name="twitter:image" content="https://prigoana.com/button/880x310.png">
+
+    <link rel="dns-prefetch" href="https://ws.audioscrobbler.com">
+    <link rel="dns-prefetch" href="https://chat.prigoana.com">
+    <link rel="dns-prefetch" href="https://121124.prigoana.com">
+    <link rel="dns-prefetch" href="https://plausible.canine.tools">
+    <link rel="preconnect" href="https://ws.audioscrobbler.com" crossorigin>
+    <link rel="preconnect" href="https://chat.prigoana.com" crossorigin>
+
     <link rel="icon" type="image/x-icon" href="./favicon.png">
     <link rel="stylesheet" href="./styles.css">
     <script src="./scripts/chat.js" defer></script>
@@ -16,6 +41,26 @@
     <script defer data-domain="prigoana.com" src="https://plausible.canine.tools/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js"></script>
     <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
     <script src="https://cdn.hopjs.net/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "PRIGOANA.COM",
+        "url": "https://prigoana.com",
+        "author": {
+            "@type": "Person",
+            "name": "Eduard Prigoana",
+            "url": "https://prigoana.com",
+            "sameAs": [
+                "https://github.com/eduardprigoana",
+                "https://www.last.fm/user/eduardprigoana",
+                "https://www.instagram.com/edideaur",
+                "https://musicbrainz.org/user/EduardPrigoana"
+            ]
+        }
+    }
+    </script>
 </head>
 <body>
 
@@ -31,9 +76,9 @@
         <header class="reveal-on-scroll">
             <div>
                 <h1 id="glitchText" data-text="PRIGOANA.COM">PRIGOANA.COM</h1>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-                    <div style="border: 1px solid #fff; padding: 4px 10px; font-size: 0.75rem; font-weight: bold; background: rgba(255,255,255,0.05);">
-                        <span id="visitor-count">VISITORS: <span style="animation: blink 0.5s infinite alternate;">...</span></span>
+                <div class="visitor-badge-wrap">
+                    <div class="visitor-badge">
+                        <span id="visitor-count" aria-live="polite">VISITORS: <span class="loading-blink">...</span></span>
                     </div>
                 </div>
             </div>
@@ -54,17 +99,17 @@
 
                 <div class="widget">
                     <span class="widget-title">SCRIPTURE</span>
-                    <a id="link" href="#" style="display: block; margin-top: 10px;">
+                    <a id="link" href="#" class="verse-link">
                         <strong>
-                            <p id="verse" style="font-size: 0.8rem; font-style: italic; margin-bottom: 5px; color: #bbb; border-left: 2px solid #333; padding-left: 10px;">Loading verse...</p>
-                            <p id="reference" style="font-size: 0.7rem; text-align: right; font-weight: bold; color: var(--accent);">>_ REVELATION</p>
+                            <p id="verse" class="verse-text">Loading verse...</p>
+                            <p id="reference" class="verse-ref">>_ REVELATION</p>
                         </strong>
                     </a>
                 </div>
 
                 <div class="widget">
                     <span class="widget-title">LAST PLAYED SONG</span>
-                    <div id="now-playing" class="skeleton">
+                    <div id="now-playing" class="skeleton" aria-live="polite">
                         <div class="player-card">
                             <div class="player-art-container">
                                 <img id="np-art" class="player-art" src="" alt="Album Art">
@@ -85,12 +130,12 @@
 <div class="widget">
     <span class="widget-title">CHATBOX</span>
     <div class="chatbox-container">
-        <div id="chat-messages" class="chat-messages"></div>
+        <div id="chat-messages" class="chat-messages" aria-live="polite"></div>
         <form id="chat-form" class="chat-form">
-            <input type="text" id="chat-name" placeholder="Name *" maxlength="100" required>
-            <input type="text" id="chat-contact" placeholder="Email/Website" maxlength="255">
-            <input type="url" id="chat-avatar" placeholder="Avatar URL" maxlength="500">
-            <textarea id="chat-message" placeholder="Message *" maxlength="1000" required rows="2"></textarea>
+            <input type="text" id="chat-name" placeholder="Name *" maxlength="100" required aria-label="Your name">
+            <input type="text" id="chat-contact" placeholder="Email/Website" maxlength="255" aria-label="Email or website">
+            <input type="url" id="chat-avatar" placeholder="Avatar URL" maxlength="500" aria-label="Avatar image URL">
+            <textarea id="chat-message" placeholder="Message *" maxlength="1000" required rows="2" aria-label="Your message"></textarea>
             <button type="submit" class="crypto-btn">SEND</button>
         </form>
     </div>
@@ -100,60 +145,60 @@
                     <span class="widget-title">DONATIONS</span>
 
                     <div class="crypto-item">
-                        <div class="crypto-header" onclick="toggleCrypto(this)">
+                        <button class="crypto-header" type="button">
                             <span>BITCOIN (BTC)</span>
                             <span class="crypto-toggle">[+]</span>
-                        </div>
+                        </button>
                         <div class="crypto-content">
                             <div class="crypto-address-display">bc1qn3ufzs4nk62lhfykx78atzjxx8hxptzmrm0ckr</div>
                             <div class="crypto-actions">
-                                <button class="crypto-btn" onclick="copyAddress(this, 'bc1qn3ufzs4nk62lhfykx78atzjxx8hxptzmrm0ckr')">COPY</button>
-                                <button class="crypto-btn" onclick="showQR(this, 'bc1qn3ufzs4nk62lhfykx78atzjxx8hxptzmrm0ckr')">QR CODE</button>
+                                <button class="crypto-btn" data-action="copy" data-address="bc1qn3ufzs4nk62lhfykx78atzjxx8hxptzmrm0ckr">COPY</button>
+                                <button class="crypto-btn" data-action="qr" data-address="bc1qn3ufzs4nk62lhfykx78atzjxx8hxptzmrm0ckr">QR CODE</button>
                             </div>
                             <div class="qr-container"></div>
                         </div>
                     </div>
 
                     <div class="crypto-item">
-                        <div class="crypto-header" onclick="toggleCrypto(this)">
+                        <button class="crypto-header" type="button">
                             <span>ETHEREUM (ETH)</span>
                             <span class="crypto-toggle">[+]</span>
-                        </div>
+                        </button>
                         <div class="crypto-content">
                             <div class="crypto-address-display">0x0b39d5D190fDB127d13458bd2086cDf950D3034C</div>
                             <div class="crypto-actions">
-                                <button class="crypto-btn" onclick="copyAddress(this, '0x0b39d5D190fDB127d13458bd2086cDf950D3034C')">COPY</button>
-                                <button class="crypto-btn" onclick="showQR(this, '0x0b39d5D190fDB127d13458bd2086cDf950D3034C')">QR CODE</button>
+                                <button class="crypto-btn" data-action="copy" data-address="0x0b39d5D190fDB127d13458bd2086cDf950D3034C">COPY</button>
+                                <button class="crypto-btn" data-action="qr" data-address="0x0b39d5D190fDB127d13458bd2086cDf950D3034C">QR CODE</button>
                             </div>
                             <div class="qr-container"></div>
                         </div>
                     </div>
 
                     <div class="crypto-item">
-                        <div class="crypto-header" onclick="toggleCrypto(this)">
+                        <button class="crypto-header" type="button">
                             <span>LITECOIN (LTC)</span>
                             <span class="crypto-toggle">[+]</span>
-                        </div>
+                        </button>
                         <div class="crypto-content">
                             <div class="crypto-address-display">ltc1q88kpywg3jxxg0jsx9c4e9d8gqs7p07fqptjgtv</div>
                             <div class="crypto-actions">
-                                <button class="crypto-btn" onclick="copyAddress(this, 'ltc1q88kpywg3jxxg0jsx9c4e9d8gqs7p07fqptjgtv')">COPY</button>
-                                <button class="crypto-btn" onclick="showQR(this, 'ltc1q88kpywg3jxxg0jsx9c4e9d8gqs7p07fqptjgtv')">QR CODE</button>
+                                <button class="crypto-btn" data-action="copy" data-address="ltc1q88kpywg3jxxg0jsx9c4e9d8gqs7p07fqptjgtv">COPY</button>
+                                <button class="crypto-btn" data-action="qr" data-address="ltc1q88kpywg3jxxg0jsx9c4e9d8gqs7p07fqptjgtv">QR CODE</button>
                             </div>
                             <div class="qr-container"></div>
                         </div>
                     </div>
 
                     <div class="crypto-item">
-                        <div class="crypto-header" onclick="toggleCrypto(this)">
+                        <button class="crypto-header" type="button">
                             <span>MONERO (XMR)</span>
                             <span class="crypto-toggle">[+]</span>
-                        </div>
+                        </button>
                         <div class="crypto-content">
                             <div class="crypto-address-display">bc1qn3ufzs4nk62lhfykx78atzjxx8hxptzmrm0ckr</div>
                             <div class="crypto-actions">
-                                <button class="crypto-btn" onclick="copyAddress(this, 'bc1qn3ufzs4nk62lhfykx78atzjxx8hxptzmrm0ckr')">COPY</button>
-                                <button class="crypto-btn" onclick="showQR(this, 'bc1qn3ufzs4nk62lhfykx78atzjxx8hxptzmrm0ckr')">QR CODE</button>
+                                <button class="crypto-btn" data-action="copy" data-address="bc1qn3ufzs4nk62lhfykx78atzjxx8hxptzmrm0ckr">COPY</button>
+                                <button class="crypto-btn" data-action="qr" data-address="bc1qn3ufzs4nk62lhfykx78atzjxx8hxptzmrm0ckr">QR CODE</button>
                             </div>
                             <div class="qr-container"></div>
                         </div>
@@ -203,13 +248,13 @@
                 <section id="projects" class="section-block reveal-on-scroll">
                     <div class="section-head">
                         <h2>PROJECTS</h2>
-                        <span style="color: var(--border-light)">01</span>
+                        <span class="section-number">01</span>
                     </div>
 
                     <a href="https://artistgrid.cx/" target="_blank" class="project-card">
                         <div class="card-header">
                             <span>ARTISTGRID.CX</span>
-                            <span style="color: var(--accent);">[LIVE]</span>
+                            <span class="project-status">[LIVE]</span>
                         </div>
                         <div class="card-body">
                             <div>
@@ -221,7 +266,7 @@
                     <a href="https://monochrome.tf/" target="_blank" class="project-card">
                         <div class="card-header">
                             <span>MONOCHROME.TF</span>
-                            <span style="color: var(--accent);">[LIVE]</span>
+                            <span class="project-status">[LIVE]</span>
                         </div>
                         <div class="card-body">
                             <div>
@@ -233,7 +278,7 @@
                     <a href="https://m3u.prigoana.com" target="_blank" class="project-card">
                         <div class="card-header">
                             <span>M3U</span>
-                            <span style="color: var(--accent);">[LIVE]</span>
+                            <span class="project-status">[LIVE]</span>
                         </div>
                         <div class="card-body">
                             <div>
@@ -246,7 +291,7 @@
                 <section id="guides" class="section-block reveal-on-scroll">
                     <div class="section-head">
                         <h2>GUIDES</h2>
-                        <span style="color: var(--border-light)">02</span>
+                        <span class="section-number">02</span>
                     </div>
 
                     <details>
@@ -275,7 +320,7 @@
                             <div class="container">
                                 <p>No logs, unlimited queries, iOS Revoke protection. code <span class="highlightable" data-copy="7af1b9">7af1b9<span class="copy-feedback">COPIED</span></span></p>
                                 <div class="dropdown-container">
-                                    <label for="device-select" style="color:#888; font-size:0.8rem;">Select your device:</label>
+                                    <label for="device-select" class="dropdown-label">Select your device:</label>
                                     <select id="device-select">
                                         <option value="">> Select a device</option>
                                         <option value="android">Android</option>
@@ -299,7 +344,7 @@
                 <section id="warehouse" class="section-block reveal-on-scroll">
                     <div class="section-head">
                         <h2>LINKS</h2>
-                        <span style="color: var(--border-light)">03</span>
+                        <span class="section-number">03</span>
                     </div>
                     <ul class="resource-list">
                         <li><a href="https://monochrome.tf/">Monochrome</a> <span>(Free music streaming from tidal)</span></li>
@@ -326,7 +371,7 @@
                 <section id="licenses" class="section-block reveal-on-scroll">
                     <div class="section-head">
                         <h2>LICENCES</h2>
-                        <span style="color: var(--border-light)">04</span>
+                        <span class="section-number">04</span>
                     </div>
 
                     <details>
@@ -393,37 +438,37 @@
             </div>
 
             <div class="badge-grid">
-                <a href="https://monochrome.tf" target="_blank"><img src="https://monochrome.tf/assets/button/880x310.png" height="31px" alt="Free Music Streaming"></a>
-                <a href="https://fmhy.net/" target="_blank"><img src="./buttons/fmhy88x31.png" height="31px" alt="Free Shit"></a>
-                <a href="https://www.headphonesty.com/2024/12/spotify-ceo-becomes-richer-musician-history/" target="_blank"><img src="./buttons/shitify.gif" alt="Shitify"></a>
-                <a href="https://prigoana.com/" target="_blank"><img src="./button/88x31.png" alt="prigoana.com"></a>
-                <a href="https://wiki.archlinux.org/" target="_blank"><img src="./buttons/archlinux.gif" alt="Arch Linux"></a>
-                <a href="https://lucida.to/" target="_blank"><img src="./buttons/lucida.png" alt="lucida.to"></a>
-                <a href="https://github.com/dani-garcia/vaultwarden" target="_blank"><img src="./buttons/bitwarden.gif" alt="Vaultwarden"></a>
-                <a href="https://browsers.avoidthehack.com/" target="_blank"><img src="./buttons/chrome.gif" alt="Anti-Chrome"></a>
-                <a href="https://sad.ovh" target="_blank"><img src="https://sad.ovh/assets/binkies/sadovh.png"></a>
-                <a href="https://www.orwell.org/" target="_blank"><img src="./buttons/chromeevil.gif" alt="Chrome is Evil"></a>
-                <a href="https://thefire.org/" target="_blank"><img src="./buttons/freespeech.gif" alt="Free speech"></a>
-                <a href="https://grapheneos.org/" target="_blank"><img src="./buttons/grapheneos.gif" alt="GrapheneOS"></a>
-                <a href="https://www.home-assistant.io/" target="_blank"><img src="./buttons/home-assistant.gif" alt="Home Assistant"></a>
-                <a href="https://hacks.guide/" target="_blank"><img src="./buttons/homebrew.png" alt="Homebrew guide"></a>
-                <a href="https://archive.org/" target="_blank"><img src="./buttons/internetarchive.gif" alt="Internet Archive"></a>
-                <a href="https://fmhy.net/privacy" target="_blank"><img src="./buttons/internetprivacy.gif" alt="Privacy"></a>
-                <a href="https://libreboot.org/" target="_blank"><img src="./buttons/libreboot.gif" alt="Libreboot"></a>
-                <a href="https://www.getmonero.org/" target="_blank"><img src="./buttons/monero-now.gif" alt="Monero"></a>
-                <a href="https://wiki.prigoana.com/" target="_blank"><img src="./buttons/parentaladvisory.png" alt="Parental Advisory"></a>
-                <a href="https://fmhy.net/" target="_blank"><img src="./buttons/piracy.gif" alt="Piracy"></a>
-                <a href="https://repair.eu/" target="_blank"><img src="./buttons/right2repair.png" alt="Right to Repair"></a>
-                <a href="https://nicotine-plus.org/" target="_blank"><img src="./buttons/soulseek.gif" alt="Soulseek"></a>
-                <a href="https://ublockorigin.com/" target="_blank"><img src="./buttons/ublock.png" alt="uBlock"></a>
-                <a href="https://wiki.prigoana.com/" target="_blank"><img src="./buttons/wikipedia.gif" alt="Wiki"></a>
-                <a href="https://en.wikipedia.org/wiki/Amen_break"><img src="./buttons/amen.avif" alt="Amen Break"></a>
-                <a href="https://greens-efa.eu/"><img src="./buttons/green.avif" alt="Green"></a>
-                <a href="https://europarl.europa.eu/"><img src="./buttons/eu.avif" alt="EU"></a>
-                <a href="https://rust-lang.org/"><img src="./buttons/rust.avif" alt="Rust"></a>
+                <a href="https://monochrome.tf" target="_blank"><img src="https://monochrome.tf/assets/button/880x310.png" height="31px" alt="Free Music Streaming" loading="lazy"></a>
+                <a href="https://fmhy.net/" target="_blank"><img src="./buttons/fmhy88x31.png" height="31px" alt="Free Shit" loading="lazy"></a>
+                <a href="https://www.headphonesty.com/2024/12/spotify-ceo-becomes-richer-musician-history/" target="_blank"><img src="./buttons/shitify.gif" alt="Shitify" loading="lazy"></a>
+                <a href="https://prigoana.com/" target="_blank"><img src="./button/88x31.png" alt="prigoana.com" loading="lazy"></a>
+                <a href="https://wiki.archlinux.org/" target="_blank"><img src="./buttons/archlinux.gif" alt="Arch Linux" loading="lazy"></a>
+                <a href="https://lucida.to/" target="_blank"><img src="./buttons/lucida.png" alt="lucida.to" loading="lazy"></a>
+                <a href="https://github.com/dani-garcia/vaultwarden" target="_blank"><img src="./buttons/bitwarden.gif" alt="Vaultwarden" loading="lazy"></a>
+                <a href="https://browsers.avoidthehack.com/" target="_blank"><img src="./buttons/chrome.gif" alt="Anti-Chrome" loading="lazy"></a>
+                <a href="https://sad.ovh" target="_blank"><img src="https://sad.ovh/assets/binkies/sadovh.png" alt="sad.ovh" loading="lazy"></a>
+                <a href="https://www.orwell.org/" target="_blank"><img src="./buttons/chromeevil.gif" alt="Chrome is Evil" loading="lazy"></a>
+                <a href="https://thefire.org/" target="_blank"><img src="./buttons/freespeech.gif" alt="Free speech" loading="lazy"></a>
+                <a href="https://grapheneos.org/" target="_blank"><img src="./buttons/grapheneos.gif" alt="GrapheneOS" loading="lazy"></a>
+                <a href="https://www.home-assistant.io/" target="_blank"><img src="./buttons/home-assistant.gif" alt="Home Assistant" loading="lazy"></a>
+                <a href="https://hacks.guide/" target="_blank"><img src="./buttons/homebrew.png" alt="Homebrew guide" loading="lazy"></a>
+                <a href="https://archive.org/" target="_blank"><img src="./buttons/internetarchive.gif" alt="Internet Archive" loading="lazy"></a>
+                <a href="https://fmhy.net/privacy" target="_blank"><img src="./buttons/internetprivacy.gif" alt="Privacy" loading="lazy"></a>
+                <a href="https://libreboot.org/" target="_blank"><img src="./buttons/libreboot.gif" alt="Libreboot" loading="lazy"></a>
+                <a href="https://www.getmonero.org/" target="_blank"><img src="./buttons/monero-now.gif" alt="Monero" loading="lazy"></a>
+                <a href="https://wiki.prigoana.com/" target="_blank"><img src="./buttons/parentaladvisory.png" alt="Parental Advisory" loading="lazy"></a>
+                <a href="https://fmhy.net/" target="_blank"><img src="./buttons/piracy.gif" alt="Piracy" loading="lazy"></a>
+                <a href="https://repair.eu/" target="_blank"><img src="./buttons/right2repair.png" alt="Right to Repair" loading="lazy"></a>
+                <a href="https://nicotine-plus.org/" target="_blank"><img src="./buttons/soulseek.gif" alt="Soulseek" loading="lazy"></a>
+                <a href="https://ublockorigin.com/" target="_blank"><img src="./buttons/ublock.png" alt="uBlock" loading="lazy"></a>
+                <a href="https://wiki.prigoana.com/" target="_blank"><img src="./buttons/wikipedia.gif" alt="Wiki" loading="lazy"></a>
+                <a href="https://en.wikipedia.org/wiki/Amen_break"><img src="./buttons/amen.avif" alt="Amen Break" loading="lazy"></a>
+                <a href="https://greens-efa.eu/"><img src="./buttons/green.avif" alt="Green" loading="lazy"></a>
+                <a href="https://europarl.europa.eu/"><img src="./buttons/eu.avif" alt="EU" loading="lazy"></a>
+                <a href="https://rust-lang.org/"><img src="./buttons/rust.avif" alt="Rust" loading="lazy"></a>
             </div>
 
-            <p style="margin-top: 30px; font-family: var(--font-mono); opacity: 0.5;">
+            <p class="footer-text">
                 COPYLEFT PRIGOANA.COM 2026 | NO RIGHTS RESERVED
             </p>
         </footer>
