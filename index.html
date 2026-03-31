@@ -107,21 +107,17 @@
                 </div>
 
                 <div class="widget">
-                    <span class="widget-title">LAST PLAYED SONG</span>
+                    <span class="widget-title">LAST PLAYED SONG</span> <a href="#" id="music-history-btn" class="mh-more-link">[more]</a>
                     <div id="now-playing" class="skeleton" aria-live="polite">
-                        <div class="player-card">
-                            <div class="player-art-container">
-                                <img id="np-art" class="player-art" src="" alt="Album Art">
-                            </div>
-                            <div class="player-info">
-                                <a id="np-track" class="player-track fade-text" href="#" target="_blank">Loading...</a>
-                                <a id="np-artist" class="player-artist fade-text" href="#" target="_blank"></a>
-                                <a id="np-album" class="player-album fade-text" href="#" target="_blank"></a>
-                                <div class="player-controls">
-                                    <span id="np-time" class="fade-text">Fetching...</span>
-                                    <span id="inline-play-button" class="play-btn" title="Play Preview">▶</span>
-                                </div>
-                            </div>
+                        <div class="player-art-container">
+                            <img id="np-art" class="player-art" src="" alt="Album Art">
+                        </div>
+                        <a id="np-track" class="player-track fade-text" href="#" target="_blank">Loading...</a>
+                        <a id="np-artist" class="player-artist fade-text" href="#" target="_blank"></a>
+                        <a id="np-album" class="player-album fade-text" href="#" target="_blank"></a>
+                        <div class="player-bottom">
+                            <span id="np-time" class="player-time fade-text">Fetching...</span>
+                            <span id="inline-play-button" class="play-btn" title="Play Preview">▶</span>
                         </div>
                     </div>
                 </div>
@@ -364,6 +360,7 @@
                         <li><a href="cfwaifu.com">CFWaifu</a> <span>(Console Modding)</span></li>
                         <li><a href="https://www.orwell.org/">Orwell</a> / <a href="https://verity.news/">Verity News</a> <span>(News)</span></li>
                         <li><a href="https://jmail.world/">Jmail</a> <span>(Real Jeffery Epstein emails released by Congress)</span></li>
+                        <li><a href="https://bleh.katelyn.moe/">Bleh</a> <span>(Extension to improve experience on last.fm.)</span></li>
                     </ul>
                 </section>
 
@@ -474,8 +471,7 @@
 
     </div>
 
-    <audio id="bg-audio-1" preload="auto" muted></audio>
-    <audio id="bg-audio-2" preload="auto" muted></audio>
+    <audio id="bg-audio-1" preload="none"></audio>
 
 </body>
 </html>

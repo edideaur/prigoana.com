@@ -3,6 +3,7 @@ node_modules
 
 # output
 out
+dev-dist
 dist
 *.tgz
 
