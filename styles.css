@@ -220,6 +220,7 @@ nav a:hover::before { transform: translateY(0); }
 
 .grid-layout { display: grid; grid-template-columns: 300px 1fr; }
 
+
 aside { border-right: 1px solid var(--border); padding: 1.5rem; background: var(--bg); }
 .widget { margin-bottom: 1.5rem; }
 .widget-title {
@@ -823,6 +824,252 @@ select:focus-visible {
     color: var(--bg);
 }
 
+/* Music History - Recent Scrobbles */
+
+.mh-more-link {
+    display: inline-block;
+    font-style: italic;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: var(--fg);
+    text-decoration: none;
+    margin-left: 0.5em;
+    letter-spacing: 0.5px;
+    transition: color 0.2s, transform 0.15s ease-out;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+.mh-more-link, .mh-more-link:hover, .mh-more-link:visited {
+    text-decoration: none;
+}
+.mh-more-link:hover {
+    color: var(--accent);
+}
+
+.mh-panel {
+    min-height: 80vh;
+}
+
+.mh-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.mh-title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.mh-header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.mh-pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.mh-close-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--fg-dim);
+    font-size: 1.1rem;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.mh-close-btn:hover {
+    background: var(--fg);
+    color: var(--bg);
+    border-color: var(--fg);
+}
+
+.mh-page-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--fg-dim);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    width: 32px;
+    height: 28px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mh-page-btn:hover:not(:disabled) {
+    background: var(--fg);
+    color: var(--bg);
+    border-color: var(--fg);
+}
+.mh-page-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.mh-page-info {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--fg-dim);
+    white-space: nowrap;
+}
+
+.music-loading {
+    padding: 3rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--fg-dim);
+}
+
+.music-list .track-row {
+    display: grid;
+    grid-template-columns: 50px 1fr auto;
+    gap: 1rem;
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    transition: background 0.2s;
+    animation: trackFadeIn 0.3s ease-out both;
+}
+.music-list .track-row:hover {
+    background: var(--bg-hover);
+}
+
+.track-art img,
+.track-art-empty {
+    width: 50px;
+    height: 50px;
+    border: 1px solid var(--border);
+    display: block;
+    object-fit: cover;
+}
+.track-art-empty {
+    background: var(--grid-dim, #1a1a1a);
+}
+
+.track-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.track-name {
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: var(--fg-bright);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.track-name:hover {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.track-artist {
+    font-size: 0.7rem;
+    color: var(--fg-muted);
+}
+.track-artist:hover {
+    color: var(--accent);
+}
+
+.track-album {
+    font-size: 0.65rem;
+    color: var(--fg-dim);
+}
+.track-album:hover {
+    color: var(--fg-muted);
+}
+
+.track-meta {
+    text-align: right;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.track-time {
+    font-size: 0.65rem;
+    color: var(--fg-dim);
+}
+
+.now-badge {
+    font-size: 0.6rem;
+    font-weight: bold;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 1px 6px;
+    letter-spacing: 0.5px;
+}
+
+.now-playing {
+    background: var(--accent-dim);
+}
+
+.mh-play-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--fg-dim);
+    font-size: 0.7rem;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.mh-play-btn:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+.mh-play-btn.mh-playing {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+}
+
+@keyframes trackFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.mh-new-row {
+    animation: mhSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes mhSlideIn {
+    from { opacity: 0; transform: translateY(-100%); max-height: 0; }
+    to { opacity: 1; transform: translateY(0); max-height: 200px; }
+}
+
+.mh-shifting .track-row:not(.mh-new-row) {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 /* Mobile - Keep everything, just shrink it down */
 @media(max-width: 900px) {
     body {
@@ -900,6 +1147,10 @@ select:focus-visible {
         font-size: 0.65rem;
         padding: 4px 0;
     }
+
+    .mh-more-link {
+        display: none;
+    }
 }
 
 @media(max-width: 600px) {
@@ -957,6 +1208,20 @@ select:focus-visible {
 
     footer {
         padding: 1.5rem 0.75rem;
+    }
+
+    .mh-header {
+        padding: 0.6rem 0.75rem;
+    }
+    .music-list .track-row {
+        grid-template-columns: 40px 1fr auto;
+        gap: 0.75rem;
+        padding: 0.6rem 0.75rem;
+    }
+    .track-art img,
+    .track-art-empty {
+        width: 40px;
+        height: 40px;
     }
 }
 

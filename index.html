@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:light)').matches)document.documentElement.setAttribute('data-theme','light')})()</script>
-    <style>html{background:#000}[data-theme="light"]{background:#f0f0f0}body{visibility:hidden}.vite-loaded{visibility:visible}</style>
+    <style>html{background:#000}[data-theme="light"]{background:#f0f0f0}</style>
+    <link rel="stylesheet" href="/styles.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PRIGOANA.COM</title>
@@ -38,7 +39,6 @@
     <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
     <script src="https://cdn.hopjs.net/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    <script type="module" src="/src/main.js"></script>
 
     <script type="application/ld+json">
     {
@@ -473,6 +473,14 @@
 
     <audio id="bg-audio-1" preload="none"></audio>
     <audio id="bg-audio-2" preload="none"></audio>
+
+    <script src="/js/bible.js"></script>
+    <script src="/js/count.js"></script>
+    <script src="/js/style.js"></script>
+    <script src="/js/nextdns.js"></script>
+    <script src="/js/chat.js"></script>
+    <script src="/js/music-history.js"></script>
+    <script src="/js/music.js"></script>
 
 </body>
 </html>
