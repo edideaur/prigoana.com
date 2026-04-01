@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const elAlbum = document.getElementById("np-album");
     const elTime = document.getElementById("np-time");
     const elPlayBtn = document.getElementById("inline-play-button");
-    const audio = document.getElementById("bg-audio-1");
+    const audioEls = [document.getElementById("bg-audio-1"), document.getElementById("bg-audio-2")];
+    let activeAudioIdx = 0;
 
     let lastTrackKey = null;
     let currentTrackInfo = {};
@@ -14,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let workingServerIndex = null;
     let trackIdCache = {};
     let audioLoading = false;
+    let crossfadeTimer = null;
 
     const servers = [
         "https://hifi.geeked.wtf",
@@ -43,45 +45,90 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             elTime.textContent = formatTimeAgo(currentTrackInfo.uts);
         }
-        elTime.classList.remove('fade-in');
-        void elTime.offsetWidth;
-        elTime.classList.add('fade-in');
+    }
+
+    const textEls = [elTrack, elArtist, elAlbum, elTime];
+    const artContainer = document.querySelector('.player-art-container');
+    let isFirstRender = true;
+
+    // Preload image, returns promise that resolves with loaded Image (or null)
+    function preloadImage(src) {
+        if (!src) return Promise.resolve(null);
+        return new Promise(resolve => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(null);
+            img.src = src;
+        });
+    }
+
+    // Run the visual crossfade — call this only when everything is ready
+    function crossfadeVisuals(info, newImg) {
+        const artistEnc = encodeURIComponent(info.artist);
+        const albumEnc = encodeURIComponent(info.album);
+        const wasFirst = isFirstRender;
+        isFirstRender = false;
+
+        // Art crossfade
+        if (newImg) {
+            if (!wasFirst && elArt.src && elArt.naturalWidth > 0) {
+                const old = document.createElement('img');
+                old.className = 'player-art-old';
+                old.src = elArt.src;
+                old.style.opacity = '1';
+                artContainer.appendChild(old);
+                elArt.style.opacity = '0';
+                elArt.src = newImg.src;
+                void elArt.offsetWidth;
+                elArt.style.opacity = '1';
+                old.style.opacity = '0';
+                setTimeout(() => old.remove(), 650);
+            } else {
+                elArt.src = newImg.src;
+                elArt.style.opacity = '1';
+            }
+        }
+
+        const applyText = () => {
+            elTrack.textContent = info.name;
+            elTrack.href = info.url;
+            elArtist.textContent = info.artist;
+            elArtist.href = `https://www.last.fm/music/${artistEnc}`;
+            elAlbum.textContent = info.album;
+            elAlbum.href = `https://www.last.fm/music/${artistEnc}/${albumEnc}`;
+            updateTimer();
+            textEls.forEach(el => {
+                el.classList.remove('fade-out');
+                void el.offsetWidth;
+                el.classList.add('fade-in');
+            });
+        };
+
+        if (!wasFirst) {
+            // Fade out old text, then swap and fade in
+            textEls.forEach(el => {
+                el.classList.remove('fade-in');
+                void el.offsetWidth;
+                el.classList.add('fade-out');
+            });
+            setTimeout(applyText, 350);
+        } else {
+            applyText();
+        }
     }
 
     function renderMetadata(info) {
         container.classList.remove('skeleton');
-
-        const artistEnc = encodeURIComponent(info.artist);
-        const albumEnc = encodeURIComponent(info.album);
-
-        const updateText = (el, text, href) => {
-            el.classList.remove('fade-in');
-            setTimeout(() => {
-                el.textContent = text;
-                if (href) el.href = href;
-                void el.offsetWidth;
-                el.classList.add('fade-in');
-            }, 100);
-        };
-
-        updateText(elTrack, info.name, info.url);
-        updateText(elArtist, info.artist, `https://www.last.fm/music/${artistEnc}`);
-        updateText(elAlbum, info.album, `https://www.last.fm/music/${artistEnc}/${albumEnc}`);
-
-        elArt.classList.remove('loaded');
-        if (info.image) {
-            const newImg = new Image();
-            newImg.src = info.image;
-            newImg.onload = () => { elArt.src = newImg.src; elArt.classList.add('loaded'); };
-            newImg.onerror = () => { elArt.classList.add('loaded'); };
-        } else {
-            elArt.classList.add('loaded');
-        }
-
-        // Always show play button once we have metadata
         elPlayBtn.classList.add('visible');
         updatePlayBtnState();
-        updateTimer();
+
+        if (isFirstRender) {
+            // First load: preload image then show everything at once
+            preloadImage(info.image).then(img => {
+                crossfadeVisuals(info, img);
+            });
+        }
+        // Subsequent renders are triggered by handleTrackUpdate after audio is ready
     }
 
     function updatePlayBtnState() {
@@ -138,8 +185,53 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("Audio not found on any server");
     }
 
+    function activeAudio() { return audioEls[activeAudioIdx]; }
+    function inactiveAudio() { return audioEls[1 - activeAudioIdx]; }
+
+    function stopCrossfade() {
+        if (crossfadeTimer) { clearInterval(crossfadeTimer); crossfadeTimer = null; }
+    }
+
+    // Crossfade from active → inactive, then swap which is active
+    function audioCrossfade(newUrl) {
+        stopCrossfade();
+        const old = activeAudio();
+        const next = inactiveAudio();
+        activeAudioIdx = 1 - activeAudioIdx;
+
+        next.src = newUrl;
+        next.volume = 0;
+        next.play().then(() => {
+            const steps = 20;
+            const stepTime = 40; // 800ms total
+            let step = 0;
+            const oldStartVol = old.volume;
+            crossfadeTimer = setInterval(() => {
+                step++;
+                const t = step / steps;
+                next.volume = Math.min(1, t);
+                old.volume = Math.max(0, oldStartVol * (1 - t));
+                if (step >= steps) {
+                    stopCrossfade();
+                    old.pause();
+                    old.removeAttribute('src');
+                    old.load();
+                }
+            }, stepTime);
+            setupMediaSession();
+        }).catch(() => {
+            // Fallback: just hard-switch
+            old.pause();
+            old.removeAttribute('src');
+            old.load();
+            next.volume = 1;
+            next.play().catch(() => {});
+        });
+    }
+
     async function togglePlayback() {
         if (!lastTrackKey) return;
+        const audio = activeAudio();
 
         // If already playing, just pause/resume
         if (audio.src && audio.src !== '' && !audioLoading) {
@@ -172,16 +264,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    audio.addEventListener('play', () => {
-        isPlaying = true;
-        updatePlayBtnState();
-        document.dispatchEvent(new CustomEvent('sidebar-audio-play'));
-        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
-    });
-    audio.addEventListener('pause', () => {
-        isPlaying = false;
-        updatePlayBtnState();
-        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+    // Track play/pause on both audio elements
+    audioEls.forEach(a => {
+        a.addEventListener('play', () => {
+            isPlaying = true;
+            updatePlayBtnState();
+            document.dispatchEvent(new CustomEvent('sidebar-audio-play'));
+            if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+        });
+        a.addEventListener('pause', () => {
+            // Only mark as not playing if the active audio is paused
+            if (a === activeAudio()) {
+                isPlaying = false;
+                updatePlayBtnState();
+                if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+            }
+        });
     });
 
     function setupMediaSession() {
@@ -191,8 +289,8 @@ document.addEventListener("DOMContentLoaded", () => {
             artist: currentTrackInfo.artist,
             album: currentTrackInfo.album,
         });
-        navigator.mediaSession.setActionHandler('play', () => audio.play());
-        navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+        navigator.mediaSession.setActionHandler('play', () => activeAudio().play());
+        navigator.mediaSession.setActionHandler('pause', () => activeAudio().pause());
     }
 
     // ── Track updates from shared poller ──
@@ -221,26 +319,61 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         lastTrackKey = trackKey;
-        renderMetadata(currentTrackInfo);
 
-        // If track changed and was playing, auto-load new track audio
         if (wasPlaying && !audioLoading) {
+            // Preload image + audio URL + buffer new track, then crossfade everything
             audioLoading = true;
             updatePlayBtnState();
-            findAudioUrl(trackKey)
-                .then(url => {
-                    audio.src = url;
-                    audio.volume = 1;
-                    return audio.play();
-                })
-                .then(() => setupMediaSession())
-                .catch(err => console.warn('Audio not available:', err.message))
-                .finally(() => { audioLoading = false; updatePlayBtnState(); });
+
+            Promise.all([
+                preloadImage(currentTrackInfo.image),
+                findAudioUrl(trackKey)
+            ]).then(([newImg, audioUrl]) => {
+                // Buffer the new track on the inactive element
+                const next = inactiveAudio();
+                next.preload = 'auto';
+                next.src = audioUrl;
+
+                return new Promise((resolve, reject) => {
+                    const timeout = setTimeout(() => resolve([newImg, audioUrl]), 5000);
+                    next.addEventListener('canplaythrough', () => {
+                        clearTimeout(timeout);
+                        resolve([newImg, audioUrl]);
+                    }, { once: true });
+                    next.addEventListener('error', () => {
+                        clearTimeout(timeout);
+                        reject(new Error('Buffer failed'));
+                    }, { once: true });
+                    next.load();
+                });
+            }).then(([newImg, audioUrl]) => {
+                // Everything buffered — crossfade all at once
+                crossfadeVisuals(currentTrackInfo, newImg);
+                audioCrossfade(audioUrl);
+            }).catch(err => {
+                console.warn('Audio crossfade failed:', err.message);
+                preloadImage(currentTrackInfo.image).then(img => {
+                    crossfadeVisuals(currentTrackInfo, img);
+                });
+            }).finally(() => {
+                audioLoading = false;
+                updatePlayBtnState();
+            });
         } else {
-            // Reset audio state for new track — will fetch on click
-            audio.pause();
-            audio.removeAttribute('src');
-            audio.load();
+            // Not playing — preload image, then crossfade visuals only
+            container.classList.remove('skeleton');
+            elPlayBtn.classList.add('visible');
+
+            preloadImage(currentTrackInfo.image).then(img => {
+                crossfadeVisuals(currentTrackInfo, img);
+            });
+
+            // Reset both audio elements
+            audioEls.forEach(a => {
+                a.pause();
+                a.removeAttribute('src');
+                a.load();
+            });
             isPlaying = false;
             updatePlayBtnState();
         }
@@ -255,7 +388,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Stop sidebar audio when scrobbles list starts playing
     document.addEventListener('scrobbles-audio-play', () => {
         if (isPlaying) {
-            audio.pause();
+            stopCrossfade();
+            audioEls.forEach(a => a.pause());
             isPlaying = false;
             updatePlayBtnState();
         }

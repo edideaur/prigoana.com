@@ -446,22 +446,30 @@ select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px 
     gap: 2px;
 }
 
+.player-art-container {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 8px;
+    overflow: visible;
+}
+
 .player-art {
     display: block;
     width: 100%;
-    max-width: 300px;
     object-fit: cover;
-    opacity: 0;
-    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-                filter 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    filter: brightness(0.9) contrast(1.1);
-    margin-bottom: 8px;
-    border: 1px solid var(--border);
+    transition: opacity 0.6s ease;
 }
 
-.player-art.loaded {
-    opacity: 1;
-    filter: brightness(1) contrast(1);
+.player-art-old {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
 }
 
 .player-track,
@@ -471,33 +479,27 @@ select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px 
     display: block;
     opacity: 0;
     transform: translateX(-10px);
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                color 0.3s ease;
+    transition: opacity 0.35s ease, transform 0.35s ease, color 0.3s ease;
 }
 
 .player-track {
     font-weight: bold;
     font-size: 0.9rem;
     color: var(--fg-bright);
-    transition-delay: 0s;
 }
 
 .player-artist {
     font-size: 0.8rem;
-    transition-delay: 0.05s;
 }
 
 .player-album {
     font-size: 0.75rem;
     color: var(--fg-dim);
-    transition-delay: 0.1s;
 }
 
 .player-time {
     font-size: 0.75rem;
     color: var(--fg-dim);
-    transition-delay: 0.15s;
 }
 
 .player-track.fade-in,
@@ -506,6 +508,14 @@ select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px 
 .player-time.fade-in {
     opacity: 1;
     transform: translateX(0);
+}
+
+.player-track.fade-out,
+.player-artist.fade-out,
+.player-album.fade-out,
+.player-time.fade-out {
+    opacity: 0;
+    transform: translateX(10px);
 }
 
 .player-bottom {
