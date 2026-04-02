@@ -2,19 +2,17 @@ const CHAT_API = 'https://chat.prigoana.com/api/messages';
 
 function formatTimeAgo(timestamp) {
     if (!timestamp) return '';
-    const now = Date.now();
-    const m = String(timestamp).match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/);
-    if (!m) return '';
-    const sentMs = Date.UTC(m[1], m[2] - 1, m[3], m[4], m[5], m[6]);
-    const diffMs = now - sentMs;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
+    const parts = String(timestamp).split(/[-T:.]/).map(Number);
+    const sentMs = Date.UTC(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5]);
+    const diff = Date.now() - sentMs;
+    const mins = Math.floor(diff / 60000);
+    const hrs = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
 
-    if (diffMins < 1) return 'now';
-    if (diffMins < 60) return `${diffMins}m`;
-    if (diffHours < 24) return `${diffHours}h`;
-    if (diffDays < 7) return `${diffDays}d`;
+    if (mins < 1) return 'now';
+    if (mins < 60) return `${mins}m`;
+    if (hrs < 24) return `${hrs}h`;
+    if (days < 7) return `${days}d`;
 
     return new Date(sentMs).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
