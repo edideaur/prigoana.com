@@ -1,20 +1,19 @@
 const CHAT_API = 'https://chat.prigoana.com/api/messages';
 
 function formatTimeAgo(timestamp) {
-    if (!timestamp) return '';
-    const parts = String(timestamp).split(/[-T:.]/).map(Number);
-    const sentMs = Date.UTC(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5]);
-    const diff = Date.now() - sentMs;
-    const mins = Math.floor(diff / 60000);
-    const hrs = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
+    const now = new Date();
+    const sentAt = new Date(timestamp);
+    const diffMs = now - sentAt;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
 
-    if (mins < 1) return 'now';
-    if (mins < 60) return `${mins}m`;
-    if (hrs < 24) return `${hrs}h`;
-    if (days < 7) return `${days}d`;
+    if (diffMins < 1) return 'now';
+    if (diffMins < 60) return `${diffMins}m`;
+    if (diffHours < 24) return `${diffHours}h`;
+    if (diffDays < 7) return `${diffDays}d`;
 
-    return new Date(sentMs).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return sentAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
 function escapeHtml(text) {
@@ -30,7 +29,7 @@ function renderMessage(msg) {
         : '';
 
     const contactHtml = msg.contact && msg.contact.trim() !== ''
-        ? `<div class="chat-contact">→ <a href="${/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(msg.contact) ? 'mailto:' + msg.contact : msg.contact}" target="_blank" rel="noopener">${escapeHtml(msg.contact)}</a></div>`
+        ? `<div class="chat-contact">→ <a href="${msg.contact.includes('@') ? 'mailto:' + msg.contact : msg.contact}" target="_blank" rel="noopener">${escapeHtml(msg.contact)}</a></div>`
         : '';
 
     return `
@@ -50,9 +49,7 @@ async function fetchMessages() {
     const container = document.getElementById('chat-messages');
 
     try {
-        const controller = new AbortController();
-        setTimeout(() => controller.abort(), 20000);
-        const response = await fetch(CHAT_API, { signal: controller.signal });
+        const response = await fetch(CHAT_API);
         if (!response.ok) throw new Error('Failed to fetch messages');
 
         const messages = await response.json();
@@ -69,15 +66,12 @@ async function fetchMessages() {
     }
 }
 
-async function postChatMessage(name, message, contact = '', avatar = '') {
-    const controller = new AbortController();
-    setTimeout(() => controller.abort(), 20000);
+async function sendChatMessage(name, message, contact = '', avatar = '') {
     const response = await fetch(`${CHAT_API}/post`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        signal: controller.signal,
         body: JSON.stringify({
             name: name.trim(),
             message: message.trim(),
@@ -138,7 +132,7 @@ function initChatbox() {
         submitBtn.textContent = 'SENDING...';
 
         try {
-            await postChatMessage(name, message, contact, avatar);
+            await sendChatMessage(name, message, contact, avatar);
             messageInput.value = '';
             await fetchMessages();
 
