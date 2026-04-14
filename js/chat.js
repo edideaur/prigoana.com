@@ -1,11 +1,12 @@
 const CHAT_API = 'https://chat.prigoana.com/api/messages';
 
-function formatTimeAgo(timestamp) {
+function formatChatTimeAgo(timestamp) {
     if (!timestamp) return '';
+    // Truncate sub-millisecond digits (API returns microseconds, e.g. .949546Z)
+    const normalized = String(timestamp).replace(/(\.\d{3})\d+/, '$1');
+    const sentMs = new Date(normalized).getTime();
+    if (isNaN(sentMs)) return '';
     const now = Date.now();
-    const m = String(timestamp).match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/);
-    if (!m) return '';
-    const sentMs = Date.UTC(m[1], m[2] - 1, m[3], m[4], m[5], m[6]);
     const diffMs = now - sentMs;
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
@@ -40,7 +41,7 @@ function renderMessage(msg) {
             <div class="chat-header">
                 ${avatarHtml}
                 <span class="chat-name">${escapeHtml(msg.name)}</span>
-                <span class="chat-time">${formatTimeAgo(msg.sent_at)}</span>
+                <span class="chat-time">${formatChatTimeAgo(msg.sent_at)}</span>
             </div>
             <div class="chat-text">${escapeHtml(msg.message)}</div>
             ${contactHtml}
