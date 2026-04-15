@@ -1,6 +1,6 @@
 const LASTFM_USER = 'eduardprigoana';
 const LASTFM_API_KEY = '816cfe50ddeeb73c9987b85de5c19e71';
-const PER_PAGE = 20;
+const PER_PAGE = 21;
 const servers = [
     'https://hifi.geeked.wtf',
     'https://hifi-one.spotisaver.net',
