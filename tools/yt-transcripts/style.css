@@ -1,0 +1,122 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: monospace;
+  background: #111;
+  color: #ccc;
+  min-height: 100vh;
+  padding: 48px 20px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+h1 {
+  font-size: 1.1rem;
+  font-weight: normal;
+  letter-spacing: 0.02em;
+  margin-bottom: 4px;
+  color: #eee;
+}
+.sub {
+  font-size: 0.8rem;
+  color: #555;
+  margin-bottom: 28px;
+}
+.input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 0;
+}
+input {
+  flex: 1;
+  padding: 9px 12px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #ddd;
+  font-family: monospace;
+  font-size: 0.85rem;
+  outline: none;
+}
+input:focus { border-color: #666; }
+button#fetchBtn {
+  padding: 9px 16px;
+  background: #222;
+  color: #ccc;
+  border: 1px solid #444;
+  font-family: monospace;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+button#fetchBtn:hover { background: #2e2e2e; color: #eee; }
+button#fetchBtn:disabled { color: #444; border-color: #2a2a2a; cursor: not-allowed; }
+
+.error {
+  margin-top: 12px;
+  padding: 9px 12px;
+  border-left: 2px solid #555;
+  font-size: 0.8rem;
+  color: #888;
+}
+.spinner {
+  margin-top: 16px;
+  font-size: 0.8rem;
+  color: #555;
+}
+.results { margin-top: 20px; }
+.video-title {
+  font-size: 0.82rem;
+  color: #aaa;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.section-label {
+  font-size: 0.75rem;
+  color: #444;
+  margin-bottom: 10px;
+}
+.subtitle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.subtitle-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #222;
+}
+.sub-name {
+  flex: 1;
+  font-size: 0.83rem;
+  color: #bbb;
+}
+.dl-links {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.dl-link {
+  font-size: 0.75rem;
+  color: #555;
+  text-decoration: none;
+  padding: 2px 0;
+  border-bottom: 1px solid #333;
+}
+.dl-link:hover { color: #ccc; border-color: #666; }
+.video-meta {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+.video-thumb {
+  width: 120px;
+  flex-shrink: 0;
+  display: block;
+}
+.video-info { flex: 1; }
+.video-duration {
+  font-size: 0.75rem;
+  color: #555;
+  margin-top: 6px;
+}

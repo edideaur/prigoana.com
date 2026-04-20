@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>yt transcript</title>
+  <link rel="icon" href="https://prigoana.com/favicon.png">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.hopjs.net/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+</head>
+<body>
+  <h1>yt transcript extractor</h1>
+  <p class="sub">paste a youtube url, get subtitle tracks</p>
+
+  <div class="input-row">
+    <input
+      id="urlInput"
+      type="text"
+      placeholder="url or video id"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <button id="fetchBtn" onclick="fetchSubtitles()">go</button>
+  </div>
+
+  <div id="status"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
