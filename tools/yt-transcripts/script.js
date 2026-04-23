@@ -1,4 +1,4 @@
-const AES_KEY = "zthxw34cdp6wfyxmpad38v52t3hsz6c5";
+const AES_KEY_DEFAULT = "zthxw34cdp6wfyxmpad38v52t3hsz6c5";
 
 const CryptoJSFormat = {
   stringify(p) {
@@ -22,10 +22,32 @@ function toBase64Url(str) {
   return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 }
 
-function encode(value) {
+function encode(value, key) {
   return toBase64Url(
-    CryptoJS.AES.encrypt(JSON.stringify(value), AES_KEY, { format: CryptoJSFormat }).toString()
+    CryptoJS.AES.encrypt(JSON.stringify(value), key, { format: CryptoJSFormat }).toString()
   ).trim();
+}
+
+async function fetchRemoteAesKey() {
+  const res = await fetch("https://prigoana.com/getaes");
+  if (!res.ok) throw new Error(`getaes HTTP ${res.status}`);
+  const data = await res.json();
+  return data.AES_KEY;
+}
+
+async function fetchSubtitleApi(videoId) {
+  const token  = encode(videoId, AES_KEY_DEFAULT);
+  const apiUrl = "https://get-info.downsub.com/" + token;
+  let res;
+  try {
+    res = await fetch(apiUrl);
+  } catch (networkErr) {
+    const remoteKey = await fetchRemoteAesKey();
+    const retryToken = encode(videoId, remoteKey);
+    res = await fetch("https://get-info.downsub.com/" + retryToken);
+  }
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
 }
 
 function extractCraigAndDaveSlug(url) {
@@ -73,13 +95,9 @@ async function fetchSubtitles(id) {
       return;
     }
     setStatus(`<div class="spinner">fetching subtitles…</div>`);
-    const token  = encode(cdData.id);
-    const apiUrl = "https://get-info.downsub.com/" + token;
     let data;
     try {
-      const res = await fetch(apiUrl);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      data = await res.json();
+      data = await fetchSubtitleApi(cdData.id);
     } catch (e) {
       setStatus(`<div class="error">subtitle api error: ${e.message}</div>`);
       btn.disabled = false;
@@ -113,14 +131,9 @@ async function fetchSubtitles(id) {
   btn.disabled = true;
   setStatus(`<div class="spinner">fetching…</div>`);
 
-  const token  = encode(videoId);
-  const apiUrl = "https://get-info.downsub.com/" + token;
-
   let data;
   try {
-    const res = await fetch(apiUrl);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    data = await res.json();
+    data = await fetchSubtitleApi(videoId);
   } catch (e) {
     setStatus(`<div class="error">api error: ${e.message}<br>cors issue if opening from file:// — use a local server</div>`);
     btn.disabled = false;
