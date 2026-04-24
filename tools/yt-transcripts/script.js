@@ -42,9 +42,13 @@ async function fetchSubtitleApi(videoId) {
   try {
     res = await fetch(apiUrl);
   } catch (networkErr) {
-    const remoteKey = await fetchRemoteAesKey();
-    const retryToken = encode(videoId, remoteKey);
-    res = await fetch("https://get-info.downsub.com/" + retryToken);
+    try {
+      const remoteKey = await fetchRemoteAesKey();
+      const retryToken = encode(videoId, remoteKey);
+      res = await fetch("https://get-info.downsub.com/" + retryToken);
+    } catch (remoteErr) {
+      res = await fetch(`/yt-subtitle?v=${encodeURIComponent(videoId)}`);
+    }
   }
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
@@ -126,7 +130,7 @@ async function fetchSubtitles(id) {
     return;
   }
 
-  history.pushState(null, "", "/?v=" + videoId);
+  history.pushState(null, "", "/tools/yt-transcripts?v=" + videoId);
   document.getElementById("urlInput").value = "https://www.youtube.com/watch?v=" + videoId;
   btn.disabled = true;
   setStatus(`<div class="spinner">fetching…</div>`);
